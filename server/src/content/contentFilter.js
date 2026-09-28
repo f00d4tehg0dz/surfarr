@@ -93,10 +93,17 @@ function nonEnglishReason(title, language, uploader) {
   return null;
 }
 
+const MULTI_EPISODE_CATS = ['Cartoons', 'Kids', 'Sitcoms'];
+const MULTI_EPISODE_MIN_SECONDS = 45 * 60;
+const MULTI_EPISODE_RE = /\bfull episodes\b|\b\d+\s*\+?\s*(hours?|hrs?)\b|\bback[- ]to[- ]back\b|\bmarathon\b|\bepisodes?\s*\d+\s*(-|–|&|\+|and|to)\s*\d+/i;
 function houseRule(title, duration, category) {
   if (SHORT_FORM_CATEGORIES.includes(category)) return null;
   if (COMPILATION_RE.test(String(title || ''))) return 'compilation';
   const d = Number(duration) || 0;
+  // Multi-episode uploads that don't say "compilation": "Full Episodes" (plural),
+  // "1 Hour", "Back to Back", "Marathon", "Episodes 3-4". Only for half-hour
+  // formats and only when the file is long enough to hold several episodes.
+  if (MULTI_EPISODE_CATS.includes(category) && d > MULTI_EPISODE_MIN_SECONDS && MULTI_EPISODE_RE.test(String(title || ''))) return 'compilation';
   const min = minSecondsFor(category);
   if (d > 0 && d < min) return `under ${Math.round(min / 60)} min (${Math.round(d / 60)}m)`;
   return null;
