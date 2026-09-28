@@ -131,6 +131,7 @@ const STANDALONE_CHANNELS = [
   { id: 'ch-nick-at-nite',         slug: 'nick-at-nite',         channelNumber: 105, name: 'Nick at Nite',              category: 'Sitcoms',     decade: '70s' },
   { id: 'ch-80s-90s-commercials',  slug: '80s-90s-commercials',  channelNumber: 106, name: '80s/90s Commercials',       category: 'Commercials', decade: '80s' },
   { id: 'ch-g4',                   slug: 'g4',                   channelNumber: 107, name: 'G4',                        category: 'Shows',       decade: '00s' },
+  { id: 'ch-reality-tv',           slug: 'reality-tv',           channelNumber: 108, name: 'Reality TV',                category: 'Shows',       decade: '00s' },
 ];
 
 function buildChannelGrid() {
