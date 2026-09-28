@@ -4,7 +4,7 @@
 
 RetroArr builds a 90+ channel grid (7 decades x 13 categories) that plays 24/7 like real television. Every channel runs on a virtual clock, tune in at any time and the same video is playing for everyone, just like broadcast TV. No recording, no VOD, no on-demand. Just TV.
 
-![RetroArr](https://github.com/f00d4tehg0dz/retroarr/blob/main/client/src/logo.png?raw=true)
+![RetroArr](docs/banner.png)
 
 ---
 
