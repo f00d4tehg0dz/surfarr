@@ -17,7 +17,7 @@
 //                      caller would otherwise look like 127.0.0.1.
 //
 // PLUGIN_ADMIN_KEY is accepted as an alias of ADMIN_TOKEN.
-// Based on the report in f00d4tehg0dz/retroarr PR #1 (CWE-862).
+// Based on the report in f00d4tehg0dz/surfarr PR #1 (CWE-862).
 
 const crypto = require('crypto');
 
@@ -59,13 +59,13 @@ function requireAdmin(req, res, next) {
   }
   if (looksProxied(req) && !TRUST_PROXY) {
     return res.status(403).json({
-      error: 'This request came through a reverse proxy. Set ADMIN_TOKEN (recommended) or TRUST_PROXY so RetroArr can tell who is asking.',
+      error: 'This request came through a reverse proxy. Set ADMIN_TOKEN (recommended) or TRUST_PROXY so SurfArr can tell who is asking.',
       code: 'PROXY_UNTRUSTED',
     });
   }
   if (isLocalAddress(req.ip)) return next();
   return res.status(403).json({
-    error: 'Changes are only allowed from your local network. Set ADMIN_TOKEN to manage RetroArr remotely.',
+    error: 'Changes are only allowed from your local network. Set ADMIN_TOKEN to manage SurfArr remotely.',
     code: 'NOT_LOCAL',
   });
 }

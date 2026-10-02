@@ -1,7 +1,7 @@
 {
-  "name": "retroarr-server",
+  "name": "surfarr-server",
   "version": "1.1.0",
-  "description": "RetroArr backend \u2014 HDHomeRun emulation + YouTube linear TV",
+  "description": "SurfArr backend \u2014 HDHomeRun emulation + YouTube linear TV",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",

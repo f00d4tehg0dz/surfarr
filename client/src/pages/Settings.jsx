@@ -15,7 +15,7 @@ function AccessPanel() {
       <p className="text-sm text-m3-muted">
         {tokenMode
           ? 'This server requires an admin key for changes (ADMIN_TOKEN). Enter it once per browser.'
-          : 'Changes are allowed from your local network. Set ADMIN_TOKEN on the server to manage RetroArr from anywhere with a key.'}
+          : 'Changes are allowed from your local network. Set ADMIN_TOKEN on the server to manage SurfArr from anywhere with a key.'}
       </p>
       <div className="flex gap-2">
         <input className="input" type="password" autoComplete="off" placeholder="Admin key" value={key}
@@ -35,7 +35,7 @@ export default function Settings() {
 
   const [form, setForm] = useState({
     remoteApiUrl: '',
-    deviceName: 'RetroArr',
+    deviceName: 'SurfArr',
     streamQuality: '720p',
     tunerCount: 4,
   });
@@ -44,7 +44,7 @@ export default function Settings() {
     if (settings) {
       setForm({
         remoteApiUrl: settings.remoteApiUrl || '',
-        deviceName: settings.deviceName || 'RetroArr',
+        deviceName: settings.deviceName || 'SurfArr',
         streamQuality: settings.streamQuality || '720p',
         tunerCount: settings.tunerCount || 4,
       });

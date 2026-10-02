@@ -1,10 +1,12 @@
-# RetroArr
+# SurfArr
 
 **Self-hosted YouTube linear TV. Turn YouTube playlists into live cable TV channels organized by decade and genre, complete with HDHomeRun emulation for Plex, Jellyfin, and Emby.**
 
-RetroArr builds a 90+ channel grid (7 decades x 13 categories) that plays 24/7 like real television. Every channel runs on a virtual clock, tune in at any time and the same video is playing for everyone, just like broadcast TV. No recording, no VOD, no on-demand. Just TV.
+SurfArr builds a 90+ channel grid (7 decades x 13 categories) that plays 24/7 like real television. Every channel runs on a virtual clock, tune in at any time and the same video is playing for everyone, just like broadcast TV. No recording, no VOD, no on-demand. Just TV.
 
-![RetroArr](docs/banner.png)
+![SurfArr](docs/banner.png)
+
+Formerly RetroArr. Upgrading? See [Coming from RetroArr](#coming-from-retroarr).
 
 ---
 
@@ -38,7 +40,7 @@ The image ships with everything the streams need: Node 22, FFmpeg and yt-dlp (wh
 Create a `.env` file:
 
 ```env
-DEVICE_NAME=RetroArr
+DEVICE_NAME=SurfArr
 STREAM_QUALITY=720p
 TUNER_COUNT=4
 TZ=America/New_York
@@ -48,9 +50,9 @@ Create a `docker-compose.yml` (or download [`docker/docker-compose.yml`](docker/
 
 ```yaml
 services:
-  retroarr:
-    image: f00d4tehg0dz/retroarr:latest
-    container_name: retroarr
+  surfarr:
+    image: f00d4tehg0dz/surfarr:latest
+    container_name: surfarr
     restart: unless-stopped
     network_mode: host          # Linux: needed for Plex/Jellyfin auto-discovery
     # ports:                    # Docker Desktop (Windows/macOS): remove network_mode
@@ -76,7 +78,7 @@ docker compose logs -f     # watch the first sync populate the channels
 >
 > **Windows / macOS (Docker Desktop):** host networking isn't available. Remove `network_mode: host`, uncomment `ports`, and add the tuner manually in your media server using `http://<your-ip>:8888`.
 >
-> **Synology Container Manager:** use *Project → Create* and paste the compose file, or when creating the container manually pick **"Use the same network as Docker Host"**. If DSM already occupies UDP 1900, RetroArr just logs a warning. HDHomeRun discovery uses UDP 65001 and keeps working.
+> **Synology Container Manager:** use *Project → Create* and paste the compose file, or when creating the container manually pick **"Use the same network as Docker Host"**. If DSM already occupies UDP 1900, SurfArr just logs a warning. HDHomeRun discovery uses UDP 65001 and keeps working.
 
 The dashboard is available at `http://localhost:8888`. First boot runs a sync in the background; channels appear in Plex/Jellyfin once they have videos (usually a minute or two).
 
@@ -84,12 +86,12 @@ The dashboard is available at `http://localhost:8888`. First boot runs a sync in
 
 Prerequisites: Node.js 20+ (22+ recommended, yt-dlp can use it as its JavaScript runtime), FFmpeg, yt-dlp (any of: on your PATH, `pip install yt-dlp`, or the binary dropped in `./scripts`)
 
-RetroArr auto-detects `ffmpeg`, `ffprobe` and `yt-dlp` on Windows, macOS and Linux. It looks in `./scripts`, `./bin`, `./server/bin`, `/usr/local/bin` and your `PATH`, and falls back to `python -m yt_dlp`. You only need `YTDLP_PATH` / `FFMPEG_PATH` if your binaries live somewhere unusual, and a path that doesn't exist on the current OS is ignored with a warning rather than breaking playback.
+SurfArr auto-detects `ffmpeg`, `ffprobe` and `yt-dlp` on Windows, macOS and Linux. It looks in `./scripts`, `./bin`, `./server/bin`, `/usr/local/bin` and your `PATH`, and falls back to `python -m yt_dlp`. You only need `YTDLP_PATH` / `FFMPEG_PATH` if your binaries live somewhere unusual, and a path that doesn't exist on the current OS is ignored with a warning rather than breaking playback.
 
 ```bash
 # Clone the repo
-git clone https://github.com/f00d4tehg0dz/retroarr.git
-cd retroarr
+git clone https://github.com/f00d4tehg0dz/surfarr.git
+cd surfarr
 
 # Install and start the server
 cd server
@@ -116,7 +118,7 @@ npm start                    # Serves both API and client on port 8888
 
 | Variable | Default | Description |
 |---|---|---|
-| `DEVICE_NAME` | `RetroArr` | Name shown in media server tuner list |
+| `DEVICE_NAME` | `SurfArr` | Name shown in media server tuner list |
 | `STREAM_QUALITY` | `720p` | YouTube stream quality (`360p`, `480p`, `720p`, `1080p`) |
 | `TUNER_COUNT` | `4` | Number of simultaneous streams |
 | `TZ` | `America/New_York` | Timezone for EPG schedule |
@@ -135,18 +137,27 @@ npm start                    # Serves both API and client on port 8888
 | `ENABLE_HDHR_DISCOVERY` / `ENABLE_SSDP` | `true` | Turn off a discovery responder |
 | `HOUSE_RULE_MIN_MINUTES` | | Per-category minimum video length in minutes. Everything else defaults to 15. The compose file ships `Cartoons=6,Kids=6,Talk TV=5` |
 | `ADMIN_TOKEN` | |  Admin key for anything that changes the server (settings, channels, plugins, sync, reports, `/api/debug`). Unset = allowed from your local network only. **Set this if the dashboard is reachable from the internet**; enter it in the dashboard under Settings → Access. `PLUGIN_ADMIN_KEY` is accepted as an alias |
-| `TRUST_PROXY` | |  Set (e.g. `1`) when RetroArr sits behind a reverse proxy, so the real client IP is used. Without it, proxied requests can't make changes unless `ADMIN_TOKEN` is used |
+| `TRUST_PROXY` | |  Set (e.g. `1`) when SurfArr sits behind a reverse proxy, so the real client IP is used. Without it, proxied requests can't make changes unless `ADMIN_TOKEN` is used |
 
 ---
 
+
+## Coming from RetroArr
+
+Same project, new name. Your data and channels carry over.
+
+1. In your compose file change `image: f00d4tehg0dz/retroarr:latest` to `image: f00d4tehg0dz/surfarr:latest` (the old tag still gets updates for now).
+2. Leave the `retroarr-db` volume name alone. That's where your settings live.
+3. `docker compose up -d`. Plex, Jellyfin and Emby see the same tuner, so you don't need to set anything up again.
+
 ## Connecting Your Media Server
 
-RetroArr emulates an HDHomeRun network tuner and answers the real HDHomeRun discovery protocol (UDP 65001) as well as SSDP, so Plex, Jellyfin and Emby find it on the local network the same way they find real Silicondust hardware, provided the container runs with host networking.
+SurfArr emulates an HDHomeRun network tuner and answers the real HDHomeRun discovery protocol (UDP 65001) as well as SSDP, so Plex, Jellyfin and Emby find it on the local network the same way they find real Silicondust hardware, provided the container runs with host networking.
 
 ### Plex
 
 1. Go to **Settings > Live TV & DVR**
-2. Plex should auto-detect "RetroArr" as a tuner, click it to set up
+2. Plex should auto-detect "SurfArr" as a tuner, click it to set up
 3. When prompted for a guide, select **"Add Guide with XMLTV"** and enter:
    ```
    http://<your-ip>:8888/epg.xml
@@ -182,7 +193,7 @@ http://<your-ip>:8888/lineup.m3u
 
 (`/playlist.m3u` is the same file.)
 
-### RetroArr TV Mode
+### SurfArr TV Mode
 
 Open `http://<your-ip>:8888/tv` in a browser for the built-in CRT TV viewer with channel surfing.
 
@@ -209,17 +220,17 @@ Open `http://<your-ip>:8888/tv` in a browser for the built-in CRT TV viewer with
 
 **`Sign in to confirm you're not a bot` / videos resolve but nothing plays.** YouTube rate-limits datacenter and some NAS IPs. Export your browser's YouTube cookies to a `cookies.txt` (e.g. the *Get cookies.txt LOCALLY* extension), mount it into the container and set `YTDLP_COOKIES=/app/server/db/cookies.txt`.
 
-**Playback broke after weeks of working.** YouTube changed something; update yt-dlp. Docker does this automatically at every start (`docker compose restart retroarr`). Manual installs: `yt-dlp -U` or `pip install -U yt-dlp`.
+**Playback broke after weeks of working.** YouTube changed something; update yt-dlp. Docker does this automatically at every start (`docker compose restart surfarr`). Manual installs: `yt-dlp -U` or `pip install -U yt-dlp`.
 
 **Plex doesn't find the tuner.** Auto-discovery needs `network_mode: host` (Linux). Otherwise add it manually: *Settings → Live TV & DVR → Set up → Don't see your device? → enter* `http://<your-ip>:8888`.
 
-**A specific video keeps failing.** RetroArr marks videos YouTube reports as removed/private as dead and skips them; transient failures are skipped for 30 minutes. `GET /api/debug/stream/<channel-id>` shows dead counts, and the nightly cleanup removes confirmed-dead videos.
+**A specific video keeps failing.** SurfArr marks videos YouTube reports as removed/private as dead and skips them; transient failures are skipped for 30 minutes. `GET /api/debug/stream/<channel-id>` shows dead counts, and the nightly cleanup removes confirmed-dead videos.
 
 ---
 
 ## Live Channels
 
-RetroArr can carry 24/7 YouTube live streams as channels (numbers 200+). They come from the RetroArr API (`/live`, also embedded in `/config`) and appear automatically after a sync: in the dashboard, TV mode, the M3U, the guide (hourly "LIVE" blocks) and Plex/Jellyfin. The stream is relayed with FFmpeg stream-copy (near-zero CPU) and transcoded only if a player can't take the copy. When a stream ends, the next sync (or the next tune-in) looks up the channel's current stream and swaps the ID.
+SurfArr can carry 24/7 YouTube live streams as channels (numbers 200+). They come from the SurfArr API (`/live`, also embedded in `/config`) and appear automatically after a sync: in the dashboard, TV mode, the M3U, the guide (hourly "LIVE" blocks) and Plex/Jellyfin. The stream is relayed with FFmpeg stream-copy (near-zero CPU) and transcoded only if a player can't take the copy. When a stream ends, the next sync (or the next tune-in) looks up the channel's current stream and swaps the ID.
 
 To add your own locally, drop a JSON file in `plugins/`:
 
@@ -231,7 +242,7 @@ To add your own locally, drop a JSON file in `plugins/`:
 
 ## Custom Plugin Channels
 
-RetroArr supports community-contributed channel packs via the plugin repository. Browse and install them from the **Plugins** page in the dashboard, or create your own.
+SurfArr supports community-contributed channel packs via the plugin repository. Browse and install them from the **Plugins** page in the dashboard, or create your own.
 
 ### Installing Plugins
 
@@ -334,7 +345,7 @@ The client dev server proxies API requests to the server on port 8888.
 
 ## License
 
-RetroArr is licensed under the [GNU General Public License v3.0 (GPL-3.0)](LICENSE).
+SurfArr is licensed under the [GNU General Public License v3.0 (GPL-3.0)](LICENSE).
 
 This means:
 

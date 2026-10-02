@@ -30,7 +30,7 @@ export default function Sidebar() {
             <img src={logo} alt="" className="w-9 h-9 rounded-xl ring-1 ring-m3-border" />
             <div>
               <div className="font-display text-xl font-extrabold tracking-tight leading-none">
-                Retro<span className="text-m3-primary">Arr</span>
+                Surf<span className="text-m3-primary">Arr</span>
               </div>
               <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-m3-muted mt-1">Linear TV</div>
             </div>

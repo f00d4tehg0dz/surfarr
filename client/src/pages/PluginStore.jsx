@@ -54,7 +54,7 @@ export default function PluginStore() {
           <p className="text-m3-muted text-sm mt-1">
             Browse and install community channels.
             <a
-              href="https://github.com/f00d4tehg0dz/retroarr/tree/main/plugin-repo"
+              href="https://github.com/f00d4tehg0dz/surfarr/tree/main/plugin-repo"
               target="_blank"
               rel="noopener noreferrer"
               className="text-m3-primary hover:underline ml-1"

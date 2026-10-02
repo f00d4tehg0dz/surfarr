@@ -2,7 +2,7 @@
 
 // Daily sync job: refreshes channel.cachedVideos[] in LowDB.
 //
-//   Grid + standalone channels → remote RetroArr API (curated metadata)
+//   Grid + standalone channels → remote SurfArr API (curated metadata)
 //   Plugin channels            → remote API first, then yt-dlp against the
 //                                plugin's own YAML sources (playlists, channels
 //                                or single videos) as the fallback

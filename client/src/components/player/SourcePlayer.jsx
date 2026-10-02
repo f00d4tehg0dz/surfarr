@@ -4,7 +4,7 @@ import { isArchiveId, archiveFileUrl, youtubeEmbedUrl } from '../shared/media';
 // Plays one video from whichever source it lives on: a YouTube embed, or a
 // plain <video> for Internet Archive MP4 files. Starts at `seekSeconds` so
 // the virtual clock stays in sync; rebuild it (change `key`) to re-tune.
-export default function SourcePlayer({ videoId, seekSeconds = 0, controls = true, title = 'RetroArr', className = 'absolute inset-0 h-full w-full' }) {
+export default function SourcePlayer({ videoId, seekSeconds = 0, controls = true, title = 'SurfArr', className = 'absolute inset-0 h-full w-full' }) {
   const ref = useRef(null);
   const archive = isArchiveId(videoId);
 

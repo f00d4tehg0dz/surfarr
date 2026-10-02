@@ -1,9 +1,9 @@
-# RetroArr — Multi-stage Docker build (linux/amd64 + linux/arm64)
+# SurfArr — Multi-stage Docker build (linux/amd64 + linux/arm64)
 #
 # Stage 1: Build the React client
 # Stage 2: Runtime with Node.js 22, FFmpeg and yt-dlp on Alpine
 #
-# Build from the repo root:  docker build -f docker/Dockerfile -t retroarr .
+# Build from the repo root:  docker build -f docker/Dockerfile -t surfarr .
 
 # ─────────────────────────────────────────────────────────────────
 # Stage 1: React build
@@ -24,7 +24,7 @@ RUN npm run build
 # ─────────────────────────────────────────────────────────────────
 FROM node:22-alpine AS runtime
 
-LABEL maintainer="RetroArr"
+LABEL maintainer="SurfArr"
 LABEL description="Self-hosted YouTube linear TV server with HDHomeRun emulation"
 
 # System dependencies:
@@ -74,8 +74,8 @@ COPY plugin-repo/ /app/plugin-repo/
 # Compiled React app from stage 1
 COPY --from=client-builder /app/server/public ./public
 
-COPY docker/entrypoint.sh /usr/local/bin/retroarr-entrypoint
-RUN chmod +x /usr/local/bin/retroarr-entrypoint
+COPY docker/entrypoint.sh /usr/local/bin/surfarr-entrypoint
+RUN chmod +x /usr/local/bin/surfarr-entrypoint
 
 # Persist data across container restarts (db.json + installed plugins)
 VOLUME ["/app/server/db"]
@@ -89,5 +89,5 @@ EXPOSE 1900/udp
 HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
     CMD curl -fsS "http://127.0.0.1:${PORT:-8888}/api/status" || exit 1
 
-ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/retroarr-entrypoint"]
+ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/surfarr-entrypoint"]
 CMD ["node", "src/index.js"]

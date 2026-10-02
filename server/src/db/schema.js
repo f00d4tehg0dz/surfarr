@@ -8,7 +8,7 @@ function getDefaultSchema() {
   return {
     settings: {
       remoteApiUrl: process.env.REMOTE_API_URL || '',
-      deviceName: process.env.DEVICE_NAME || 'RetroArr',
+      deviceName: process.env.DEVICE_NAME || 'SurfArr',
       streamQuality: process.env.STREAM_QUALITY || '720p',
       tunerCount: parseInt(process.env.TUNER_COUNT, 10) || 4,
     },

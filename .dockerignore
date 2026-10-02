@@ -35,7 +35,7 @@ Thumbs.db
 .DS_Store
 .history
 
-# retroarr-private extras never needed in the image
+# surfarr-private extras never needed in the image
 landing/
 yaml/
 claude.md
