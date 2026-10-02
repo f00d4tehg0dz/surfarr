@@ -1,6 +1,6 @@
 'use strict';
 
-// RetroArr Server — Boot sequence:
+// SurfArr Server — Boot sequence:
 //   1. Load config + .env, resolve external binaries (yt-dlp / ffmpeg)
 //   2. Initialize LowDB (create/seed db.json if absent)
 //   3. Start discovery responders (HDHomeRun UDP 65001 + SSDP 1900)
@@ -69,7 +69,7 @@ function logBinaries() {
 }
 
 async function main() {
-  console.log(`🎬 RetroArr ${pkg.version} starting on ${process.platform}/${process.arch} (node ${process.version})...`);
+  console.log(`🎬 SurfArr ${pkg.version} starting on ${process.platform}/${process.arch} (node ${process.version})...`);
 
   // --- Step 1: Binaries ---
   logBinaries();
@@ -199,7 +199,7 @@ async function main() {
   process.on('SIGTERM', () => shutdown('SIGTERM'));
   process.on('SIGINT', () => shutdown('SIGINT'));
 
-  console.log('✅ RetroArr ready.\n');
+  console.log('✅ SurfArr ready.\n');
 }
 
 main().catch((err) => {

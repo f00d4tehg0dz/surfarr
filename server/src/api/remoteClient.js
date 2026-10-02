@@ -1,7 +1,7 @@
 'use strict';
 
 // Read-only HTTP client for the user's VPS MongoDB API.
-// RetroArr NEVER writes to the remote API — it only reads video metadata.
+// SurfArr NEVER writes to the remote API — it only reads video metadata.
 // The remote API is expected to return arrays of video objects per decade+category.
 
 const axios = require('axios');
@@ -83,7 +83,7 @@ async function fetchPluginVideos(pluginId) {
 
 // Fetch the shared channel definition (grid + standalone + plugin + live
 // channels) from the API. This is the source of truth that keeps every
-// RetroArr instance's lineup in step with the API; the local grid in
+// SurfArr instance's lineup in step with the API; the local grid in
 // channelGrid.js is only the offline fallback.
 async function fetchConfig() {
   if (!config.remoteApiUrl) return null;

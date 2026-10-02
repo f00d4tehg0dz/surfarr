@@ -30,7 +30,7 @@ export default function VideoPlayer({ channelId }) {
           key={iframeSrc.id}
           videoId={iframeSrc.id}
           seekSeconds={iframeSrc.seek}
-          title="RetroArr Live"
+          title="SurfArr Live"
           className="absolute inset-0 w-full h-full"
         />
       ) : (

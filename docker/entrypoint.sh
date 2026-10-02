@@ -1,5 +1,5 @@
 #!/bin/sh
-# RetroArr container entrypoint.
+# SurfArr container entrypoint.
 #
 # YouTube changes constantly and yt-dlp ships fixes weekly. Refreshing the
 # bundled yt-dlp at container start keeps playback working without waiting for

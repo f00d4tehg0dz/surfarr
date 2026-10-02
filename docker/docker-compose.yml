@@ -1,7 +1,7 @@
-# RetroArr — Docker Compose
+# SurfArr — Docker Compose
 #
 # Linux hosts (Synology, Unraid, Proxmox, a Pi...): keep `network_mode: host`.
-#   Plex / Jellyfin / Emby then auto-discover RetroArr as an HDHomeRun tuner
+#   Plex / Jellyfin / Emby then auto-discover SurfArr as an HDHomeRun tuner
 #   (UDP 65001 broadcast) — that only works when the container shares the
 #   host's network.
 #
@@ -13,9 +13,9 @@
 #       and a ports: list — pick one.
 
 services:
-  retroarr:
-    image: f00d4tehg0dz/retroarr:latest
-    container_name: retroarr
+  surfarr:
+    image: f00d4tehg0dz/surfarr:latest
+    container_name: surfarr
     restart: unless-stopped
     network_mode: host
     # ports:
@@ -35,7 +35,7 @@ services:
       # ── Required ────────────────────────────────────────────────
       - REMOTE_API_URL=https://retroarr-api.f00d.me
       # ── Optional ────────────────────────────────────────────────
-      - DEVICE_NAME=${DEVICE_NAME:-RetroArr}
+      - DEVICE_NAME=${DEVICE_NAME:-SurfArr}
       - STREAM_QUALITY=${STREAM_QUALITY:-720p}   # 360p | 480p | 720p | 1080p
       - TUNER_COUNT=${TUNER_COUNT:-4}
       - TZ=${TZ:-America/New_York}
@@ -43,7 +43,7 @@ services:
       # Pin the HDHomeRun device ID (8 hex chars). Leave unset to auto-generate
       # once and persist it in db.json.
       # - DEVICE_ID=104A7F3C
-      # In bridge mode, the LAN IP media servers should use to reach RetroArr
+      # In bridge mode, the LAN IP media servers should use to reach SurfArr
       # - ADVERTISE_IP=192.168.1.50
       # Access control. Reading the lineup/guide/streams is always open; changing
       # settings, channels or plugins is allowed from your LAN only, unless you
@@ -62,5 +62,5 @@ services:
       # - YTDLP_PLAYLIST_LIMIT=1000
 
 volumes:
-  retroarr-db:
+  retroarr-db:   # old name kept on purpose so upgrades from RetroArr keep their data
     driver: local

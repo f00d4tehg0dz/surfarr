@@ -43,7 +43,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name == 'push' }}
           tags: |
+            f00d4tehg0dz/surfarr:latest
+            f00d4tehg0dz/surfarr:${{ github.sha }}
             f00d4tehg0dz/retroarr:latest
-            f00d4tehg0dz/retroarr:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

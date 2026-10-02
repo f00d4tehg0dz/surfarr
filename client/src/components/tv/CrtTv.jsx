@@ -79,7 +79,7 @@ export default function CrtTv({ videoId, seekSeconds, channelName, channelNumber
                   videoId={lockedSrc.id}
                   seekSeconds={lockedSrc.seek}
                   controls={false}
-                  title={channelName || 'RetroArr TV'}
+                  title={channelName || 'SurfArr TV'}
                   className="absolute inset-0 w-full h-full"
                 />
               )}
@@ -152,7 +152,7 @@ export default function CrtTv({ videoId, seekSeconds, channelName, channelNumber
               />
               <div className="font-medium tracking-wide"
                 style={{ color: '#444', fontSize: 'clamp(0.5rem, 0.8vw, 0.75rem)' }}>
-                RETROARR · COLOR TV
+                SURFARR · COLOR TV
               </div>
             </div>
             {channelNumber && (

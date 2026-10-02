@@ -65,7 +65,7 @@ function generateXMLTV(channels, startTime, hoursAhead) {
 
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += '<!DOCTYPE tv SYSTEM "xmltv.dtd">\n';
-  xml += '<tv generator-info-name="RetroArr" generator-info-url="">\n\n';
+  xml += '<tv generator-info-name="SurfArr" generator-info-url="">\n\n';
 
   // Channel declarations
   for (const ch of enabledChannels) {

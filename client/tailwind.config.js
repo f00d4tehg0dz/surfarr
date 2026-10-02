@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-// RetroArr "Late Night Broadcast" design system (2026).
+// SurfArr "Late Night Broadcast" design system (2026).
 // Warm ink surfaces, TV-Guide marigold, phosphor teal, on-air red.
 // The `m3-*` token names are kept so every existing class picks up the new
 // palette; new work should prefer the semantic names under `tv-*`.

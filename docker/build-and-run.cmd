@@ -1,5 +1,5 @@
 @echo off
-REM RetroArr — build the Docker image from this repo and (re)start the container.
+REM SurfArr — build the Docker image from this repo and (re)start the container.
 REM Double-click or run from any prompt. Output is mirrored to docker\last-build.log.
 REM
 REM Windows/macOS Docker Desktop has no host networking, so the container is
@@ -10,11 +10,11 @@ REM works with host networking on Linux).
 setlocal
 set REPO=%~dp0..
 set LOG=%~dp0last-build.log
-set IMAGE=f00d4tehg0dz/retroarr:latest
-set NAME=retroarr
+set IMAGE=f00d4tehg0dz/surfarr:latest
+set NAME=surfarr
 
 cd /d "%REPO%"
-echo ===== RetroArr build %date% %time% ===== > "%LOG%"
+echo ===== SurfArr build %date% %time% ===== > "%LOG%"
 
 docker version >> "%LOG%" 2>&1
 if errorlevel 1 (
@@ -44,7 +44,7 @@ docker run -d --name %NAME% --restart unless-stopped ^
   -p 8888:8888 -p 65001:65001/udp -p 1900:1900/udp ^
   -v retroarr-db:/app/server/db ^
   -e REMOTE_API_URL=https://retroarr-api.f00d.me ^
-  -e DEVICE_NAME=RetroArr -e STREAM_QUALITY=720p -e TUNER_COUNT=4 -e TZ=America/New_York ^
+  -e DEVICE_NAME=SurfArr -e STREAM_QUALITY=720p -e TUNER_COUNT=4 -e TZ=America/New_York ^
   %IMAGE% >> "%LOG%" 2>&1
 if errorlevel 1 (
   echo RUN FAILED — see docker\last-build.log >> "%LOG%"

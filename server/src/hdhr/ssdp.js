@@ -6,9 +6,9 @@
 // the device's presence to Plex, Jellyfin, and Emby on the local network.
 //
 // Discovery handshake:
-//   1. RetroArr broadcasts NOTIFY to 239.255.255.250:1900 every 30s
+//   1. SurfArr broadcasts NOTIFY to 239.255.255.250:1900 every 30s
 //   2. Plex/Jellyfin sends M-SEARCH to 239.255.255.250:1900
-//   3. RetroArr responds with unicast HTTP 200 OK to the requester
+//   3. SurfArr responds with unicast HTTP 200 OK to the requester
 //   4. Plex fetches /discover.json then /lineup.json over HTTP
 
 const dgram = require('dgram');
@@ -25,7 +25,7 @@ function buildNotifyAlive(hostIp, port, deviceId) {
     `LOCATION: http://${hostIp}:${port}/discover.json`,
     'NT: urn:schemas-upnp-org:device:MediaServer:1',
     'NTS: ssdp:alive',
-    'SERVER: RetroArr/1.0 UPnP/1.0',
+    'SERVER: SurfArr/1.0 UPnP/1.0',
     `USN: uuid:${deviceId}::urn:schemas-upnp-org:device:MediaServer:1`,
     '',
     '',
@@ -38,7 +38,7 @@ function buildSearchResponse(hostIp, port, deviceId) {
     'CACHE-CONTROL: max-age=1800',
     `LOCATION: http://${hostIp}:${port}/discover.json`,
     'EXT:',
-    'SERVER: RetroArr/1.0 UPnP/1.0',
+    'SERVER: SurfArr/1.0 UPnP/1.0',
     `USN: uuid:${deviceId}::urn:schemas-upnp-org:device:MediaServer:1`,
     'ST: urn:schemas-upnp-org:device:MediaServer:1',
     '',

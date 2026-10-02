@@ -75,6 +75,8 @@ function legacyDeviceId() {
 // Fresh-install ID: MAC-seeded (stable across restarts) with a valid checksum.
 function freshDeviceId() {
   const mac = firstMac() || os.hostname();
+  // Keep the old 'retroarr:' seed so the tuner ID doesn't change after the SurfArr rename
+  // (a new ID makes Plex/Jellyfin treat it as a brand-new tuner and drop channel mappings).
   const hash = crypto.createHash('md5').update(`retroarr:${mac}`).digest();
   // Keep the top nibble at 1 like real Silicondust IDs (1xxxxxxx)
   const seed = ((hash.readUInt32BE(0) & 0x0fffffff) | 0x10000000) >>> 0;
@@ -142,7 +144,7 @@ const config = {
 
   // Seed only — lowdb.js replaces this with the persisted value at boot.
   deviceId: process.env.DEVICE_ID ? process.env.DEVICE_ID.toUpperCase() : freshDeviceId(),
-  deviceName: process.env.DEVICE_NAME || 'RetroArr',
+  deviceName: process.env.DEVICE_NAME || 'SurfArr',
   streamQuality: process.env.STREAM_QUALITY || '720p',
   tunerCount: envInt('TUNER_COUNT', 4),
 

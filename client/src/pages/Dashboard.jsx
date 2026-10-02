@@ -93,7 +93,7 @@ export default function Dashboard() {
   if (isLoading) return <div className="grid h-64 place-items-center"><LoadingSpinner size="lg" text="Warming up the tubes…" /></div>;
   if (error) return (
     <div className="panel border-m3-error/40 p-5 text-sm">
-      <span className="font-semibold text-m3-error">Can't reach the RetroArr server. </span>
+      <span className="font-semibold text-m3-error">Can't reach the SurfArr server. </span>
       <span className="text-m3-textSecondary">{error.message}</span>
     </div>
   );
@@ -127,7 +127,7 @@ export default function Dashboard() {
 
         <aside className="panel flex flex-col gap-5 p-5">
           <div>
-            <div className="eyebrow">Tonight on RetroArr</div>
+            <div className="eyebrow">Tonight on SurfArr</div>
             <div className="mt-3 grid grid-cols-3 gap-3">
               {[
                 ['On air', onAir],
@@ -143,7 +143,7 @@ export default function Dashboard() {
           </div>
           <div>
             <div className="eyebrow">Hook up your TV app</div>
-            <p className="mt-1.5 text-xs text-m3-muted">Plex, Jellyfin & Emby find RetroArr as an HDHomeRun tuner. Or paste these into any IPTV player.</p>
+            <p className="mt-1.5 text-xs text-m3-muted">Plex, Jellyfin & Emby find SurfArr as an HDHomeRun tuner. Or paste these into any IPTV player.</p>
             <div className="mt-3 space-y-2">
               <CopyField label="Tuner" value={origin} />
               <CopyField label="M3U" value={`${origin}/playlist.m3u`} />
