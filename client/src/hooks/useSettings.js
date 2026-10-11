@@ -21,7 +21,7 @@ export function useUpdateSettings() {
 export function useForceSync() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: () => retroApi.post('/settings/sync'),
+    mutationFn: () => retroApi.post('/settings/sync').then((r) => r.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['channels'] });
       queryClient.invalidateQueries({ queryKey: ['settings'] });

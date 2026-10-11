@@ -4,14 +4,33 @@
 // SurfArr NEVER writes to the remote API — it only reads video metadata.
 // The remote API is expected to return arrays of video objects per decade+category.
 
-const axios = require('axios');
 const config = require('../config');
 
+// Tiny GET-JSON helper on Node's built-in fetch (no axios). Mirrors the bits of
+// axios this file used: baseURL, query params, a timeout, and throwing on non-2xx.
 function createClient() {
-  return axios.create({
-    baseURL: config.remoteApiUrl,
-    timeout: 15000,
-  });
+  const base = String(config.remoteApiUrl || '').replace(/\/+$/, '');
+  return {
+    async get(path, { params, timeout = 15000 } = {}) {
+      const url = new URL(base + path);
+      for (const [k, v] of Object.entries(params || {})) {
+        if (v !== undefined && v !== null) url.searchParams.set(k, String(v));
+      }
+      const res = await fetch(url, {
+        headers: { Accept: 'application/json' },
+        signal: AbortSignal.timeout(timeout),
+      });
+      const text = await res.text();
+      let data = text;
+      try { data = text ? JSON.parse(text) : null; } catch { /* not JSON */ }
+      if (!res.ok) {
+        const err = new Error(`Request failed with status code ${res.status}`);
+        err.response = { status: res.status, data };
+        throw err;
+      }
+      return { status: res.status, data };
+    },
+  };
 }
 
 // Fetch all videos for a specific decade + category combination.
