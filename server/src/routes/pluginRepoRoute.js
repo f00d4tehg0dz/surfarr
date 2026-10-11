@@ -7,6 +7,7 @@
 //   POST /api/plugins/uninstall   — remove a locally installed plugin
 
 const express = require('express');
+const { pluginWriteLimiter } = require('../middleware/rateLimits');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
@@ -151,7 +152,7 @@ router.get('/installed', (req, res) => {
 });
 
 // POST /install — install a plugin from the repository
-router.post('/install', async (req, res) => {
+router.post('/install', pluginWriteLimiter, async (req, res) => {
   const { pluginId } = req.body;
   if (!pluginId) {
     return res.status(400).json({ error: 'pluginId is required' });
@@ -238,7 +239,7 @@ router.post('/install', async (req, res) => {
 });
 
 // POST /uninstall — remove a locally installed plugin
-router.post('/uninstall', async (req, res) => {
+router.post('/uninstall', pluginWriteLimiter, async (req, res) => {
   const { pluginId } = req.body;
   if (!pluginId) {
     return res.status(400).json({ error: 'pluginId is required' });

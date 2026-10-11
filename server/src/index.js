@@ -10,6 +10,7 @@
 
 const express = require('express');
 const { guardApi, adminTokenConfigured } = require('./middleware/requireAdmin');
+const { debugLimiter, pageLimiter } = require('./middleware/rateLimits');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
@@ -125,7 +126,7 @@ async function main() {
   app.use('/api/channels', channelsRoute);
   app.use('/api/settings', settingsRoute);
   app.use('/api/reports', reportsRoute);
-  app.use('/api/debug', debugRoute);
+  app.use('/api/debug', debugLimiter, debugRoute);
   app.use('/api/plugins', pluginRepoRoute);
 
   // Status endpoint
@@ -152,7 +153,7 @@ async function main() {
   const clientDist = path.join(__dirname, '../public');
   const indexPath = path.join(clientDist, 'index.html');
   app.use(express.static(clientDist));
-  app.get('*', (req, res) => {
+  app.get('*', pageLimiter, (req, res) => {
     if (req.path.startsWith('/api/') || req.path.startsWith('/stream/')) {
       return res.status(404).json({ error: 'Not found' });
     }

@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ "main" ]
 
+# Least privilege: the job only reads the repo. Docker Hub uses its own secrets,
+# and the build cache uses the Actions cache token, not GITHUB_TOKEN.
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
