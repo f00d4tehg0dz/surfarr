@@ -41,22 +41,17 @@ const DISABLED_CHANNELS = new Set([
   12,  // 60s Documentary
   13,  // 60s Talk TV
   14,  // 70s Shows
-  15,  // 70s Sitcoms
   17,  // 70s Movies
   18,  // 70s Commercials
-  19,  // 70s Drama
   20,  // 70s Specials
   21,  // 70s Theme Songs
   22,  // 70s Trailers
   23,  // 70s Bumpers
-  24,  // 70s Kids
   25,  // 70s Documentary
   26,  // 70s Talk TV
   27,  // 80s Shows
-  28,  // 80s Sitcoms
   30,  // 80s Movies
   31,  // 80s Commercials
-  32,  // 80s Drama
   33,  // 80s Specials
   34,  // 80s Theme Songs
   35,  // 80s Trailers
@@ -64,7 +59,6 @@ const DISABLED_CHANNELS = new Set([
   38,  // 80s Documentary
   39,  // 80s Talk TV
   45,  // 90s Drama
-  41,  // 90s Sitcoms
   43,  // 90s Movies
   46,  // 90s Specials
   47,  // 90s Theme Songs
@@ -74,7 +68,6 @@ const DISABLED_CHANNELS = new Set([
   53,  // 00s Shows
   56,  // 00s Movies
   57,  // 00s Commercials
-  58,  // 00s Drama
   59,  // 00s Specials
   60,  // 00s Theme Songs
   61,  // 00s Trailers
