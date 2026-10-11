@@ -1,0 +1,93 @@
+name: Release
+
+# Push a version tag to publish a release:
+#   git tag v2.0.0 && git push origin v2.0.0
+# Builds the multi-arch image, pushes it to Docker Hub and GitHub Packages (ghcr.io)
+# with version tags, then creates the GitHub Release from CHANGELOG.md.
+
+on:
+  push:
+    tags: [ "v*.*.*" ]
+
+permissions:
+  contents: write   # create the GitHub Release
+  packages: write   # push to ghcr.io (shows up under this repo's Packages)
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version from tag
+        id: v
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          PKG=$(node -p "require('./server/package.json').version")
+          if [ "$VERSION" != "$PKG" ]; then
+            echo "Tag v$VERSION does not match server/package.json ($PKG)"; exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "minor=${VERSION%.*}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Log in to GitHub Packages
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          build-args: VERSION=${{ steps.v.outputs.version }}
+          tags: |
+            f00d4tehg0dz/surfarr:${{ steps.v.outputs.version }}
+            f00d4tehg0dz/surfarr:${{ steps.v.outputs.minor }}
+            f00d4tehg0dz/surfarr:latest
+            ghcr.io/f00d4tehg0dz/surfarr:${{ steps.v.outputs.version }}
+            ghcr.io/f00d4tehg0dz/surfarr:${{ steps.v.outputs.minor }}
+            ghcr.io/f00d4tehg0dz/surfarr:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Release notes from CHANGELOG.md
+        run: |
+          awk -v v="${{ steps.v.outputs.version }}" '
+            $0 ~ "^## \\[" v "\\]" {on=1; next}
+            on && /^## \[/ {exit}
+            on {print}
+          ' CHANGELOG.md > notes.md
+          cat >> notes.md <<NOTES
+
+          ### Install
+          \`\`\`
+          docker pull f00d4tehg0dz/surfarr:${{ steps.v.outputs.version }}
+          # or
+          docker pull ghcr.io/f00d4tehg0dz/surfarr:${{ steps.v.outputs.version }}
+          \`\`\`
+          See the [installation guide](https://github.com/f00d4tehg0dz/surfarr/wiki/Installation).
+          NOTES
+          cp docker/docker-compose.yml docker-compose.yml
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --title "SurfArr ${{ steps.v.outputs.version }}" \
+            --notes-file notes.md \
+            docker-compose.yml

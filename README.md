@@ -1,5 +1,9 @@
 # SurfArr
 
+[![Release](https://img.shields.io/github/v/release/f00d4tehg0dz/surfarr)](https://github.com/f00d4tehg0dz/surfarr/releases)
+[![Docker Pulls](https://img.shields.io/docker/pulls/f00d4tehg0dz/surfarr)](https://hub.docker.com/r/f00d4tehg0dz/surfarr)
+[![License](https://img.shields.io/github/license/f00d4tehg0dz/surfarr)](LICENSE)
+
 **Retro cable TV, self-hosted.** SurfArr turns YouTube playlists and Internet Archive shows into always-on TV channels by decade and genre. Tune in any time and it's already playing, the same for everyone, just like broadcast TV.
 
 ![SurfArr](docs/banner.png)
@@ -45,6 +49,8 @@ Open `http://<your-ip>:8888`, give the first sync a minute, then add the tuner i
 | Playlist (M3U) | `http://<your-ip>:8888/lineup.m3u` |
 
 On Windows or macOS (Docker Desktop), use `ports: ["8888:8888"]` instead of host networking and add the tuner by URL.
+
+`latest` follows the newest release. To stay on one version, pin a tag such as `f00d4tehg0dz/surfarr:2.0.0` (or `ghcr.io/f00d4tehg0dz/surfarr:2.0.0`). See [Releases](https://github.com/f00d4tehg0dz/surfarr/releases) for what changed.
 
 ## Docs
 

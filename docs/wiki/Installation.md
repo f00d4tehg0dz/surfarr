@@ -60,6 +60,8 @@ Compose refuses to start if you set **both** `network_mode: host` and `ports:`. 
 docker compose pull && docker compose up -d
 ```
 
+`latest` always points at the newest release. To control when you upgrade, pin a version instead, e.g. `image: f00d4tehg0dz/surfarr:2.0.0`. The same tags are on GitHub Packages as `ghcr.io/f00d4tehg0dz/surfarr`. Each [release](https://github.com/f00d4tehg0dz/surfarr/releases) lists what changed.
+
 yt-dlp updates itself every time the container starts, so a YouTube change is usually fixed with `docker compose restart surfarr`.
 
 ## Manual install

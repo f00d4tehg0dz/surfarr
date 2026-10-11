@@ -24,8 +24,16 @@ RUN npm run build
 # ─────────────────────────────────────────────────────────────────
 FROM node:22-alpine AS runtime
 
+ARG VERSION=dev
 LABEL maintainer="SurfArr"
 LABEL description="Self-hosted YouTube linear TV server with HDHomeRun emulation"
+LABEL org.opencontainers.image.title="SurfArr" \
+      org.opencontainers.image.description="Retro cable TV, self-hosted: YouTube + Internet Archive channels with HDHomeRun emulation" \
+      org.opencontainers.image.source="https://github.com/f00d4tehg0dz/surfarr" \
+      org.opencontainers.image.url="https://surfarr.tv" \
+      org.opencontainers.image.documentation="https://github.com/f00d4tehg0dz/surfarr/wiki" \
+      org.opencontainers.image.licenses="GPL-3.0" \
+      org.opencontainers.image.version="${VERSION}"
 
 # System dependencies:
 #   ffmpeg          — video transcoding

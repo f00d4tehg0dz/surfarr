@@ -78,6 +78,12 @@ export default function Settings() {
           System Status
         </h2>
         <div className="flex justify-between items-center">
+          <span className="font-medium text-m3-muted text-sm">Version</span>
+          <a className="text-m3-text text-sm hover:underline" href="https://github.com/f00d4tehg0dz/surfarr/releases" target="_blank" rel="noreferrer">
+            {status?.version ? `v${status.version}` : '—'}
+          </a>
+        </div>
+        <div className="flex justify-between items-center">
           <span className="font-medium text-m3-muted text-sm">Last Sync</span>
           <span className="text-m3-text text-sm">
             {settings?.lastSync ? new Date(settings.lastSync).toLocaleString() : 'Never'}
