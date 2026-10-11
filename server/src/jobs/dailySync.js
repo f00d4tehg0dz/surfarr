@@ -10,7 +10,7 @@
 // Locally-flagged dead videos are never revived by a sync, and videos are
 // merged (not replaced) so a partial failure never empties a channel.
 //
-// Run schedule: 3 AM daily (via node-cron in scheduler.js)
+// Run schedule: 3 AM daily (see jobs/scheduler.js)
 // Can also be triggered manually via POST /api/settings/sync
 
 const remoteClient = require('../api/remoteClient');

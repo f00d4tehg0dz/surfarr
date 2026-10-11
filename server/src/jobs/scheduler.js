@@ -1,40 +1,55 @@
 'use strict';
 
-// Registers all cron jobs using node-cron.
+// Background jobs. No cron library: a timer wakes at the top of every minute
+// and runs whatever is due, using local time (set TZ in Docker / .env).
 // Schedule overview:
 //   3:00 AM  — Daily sync from remote VPS API → LowDB cachedVideos
 //   4:00 AM  — Dead-link cleanup (checks reports + validates videos)
 //   Every 1h — Refresh EPG cache (pre-generate XMLTV for the next 24h)
 
-const cron = require('node-cron');
+const JOBS = [
+  {
+    name: 'daily sync',
+    due: (d) => d.getHours() === 3 && d.getMinutes() === 0,
+    run: () => require('./dailySync').runDailySync(),
+  },
+  {
+    name: 'dead-link cleanup',
+    due: (d) => d.getHours() === 4 && d.getMinutes() === 0,
+    run: () => require('../reports/cleanup').runCleanup(),
+  },
+  {
+    name: 'EPG cache refresh',
+    due: (d) => d.getMinutes() === 0,
+    run: () => require('../epg/generator').invalidateCache(),
+  },
+];
 
-function initScheduler() {
-  // Daily remote API sync at 3 AM
-  cron.schedule('0 3 * * *', async () => {
-    console.log('[Scheduler] Running daily sync...');
-    const { runDailySync } = require('./dailySync');
-    await runDailySync().catch((err) =>
-      console.error('[Scheduler] Daily sync failed:', err.message)
-    );
-  });
+const running = new Set();
+let lastTick = '';
 
-  // Dead-link cleanup at 4 AM (after sync populates fresh data)
-  cron.schedule('0 4 * * *', async () => {
-    console.log('[Scheduler] Running dead-link cleanup...');
-    const { runCleanup } = require('../reports/cleanup');
-    await runCleanup().catch((err) =>
-      console.error('[Scheduler] Cleanup failed:', err.message)
-    );
-  });
-
-  // EPG cache refresh every hour
-  cron.schedule('0 * * * *', () => {
-    console.log('[Scheduler] Refreshing EPG cache...');
-    const epgGenerator = require('../epg/generator');
-    epgGenerator.invalidateCache();
-  });
-
-  console.log('[Scheduler] Cron jobs registered.');
+function tick() {
+  const now = new Date();
+  const stamp = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}`;
+  if (stamp !== lastTick) {
+    lastTick = stamp; // never run the same minute twice (timer drift)
+    for (const job of JOBS) {
+      if (!job.due(now) || running.has(job.name)) continue; // skip if the last run is still going
+      running.add(job.name);
+      console.log(`[Scheduler] Running ${job.name}...`);
+      Promise.resolve()
+        .then(job.run)
+        .catch((err) => console.error(`[Scheduler] ${job.name} failed:`, err.message))
+        .finally(() => running.delete(job.name));
+    }
+  }
+  // Re-arm for just after the next minute boundary.
+  setTimeout(tick, 60_000 - (Date.now() % 60_000) + 250).unref();
 }
 
-module.exports = { initScheduler };
+function initScheduler() {
+  setTimeout(tick, 60_000 - (Date.now() % 60_000) + 250).unref();
+  console.log('[Scheduler] Jobs registered (3:00 sync, 4:00 cleanup, hourly guide refresh).');
+}
+
+module.exports = { initScheduler, _jobs: JOBS };
