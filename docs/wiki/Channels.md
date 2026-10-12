@@ -22,8 +22,8 @@ The genres are Shows, Sitcoms, Cartoons, Movies, Commercials, Drama, Specials, T
 | Decade | On the air |
 |---|---|
 | 60s | Movies |
-| 70s | Sitcoms, Cartoons, Drama, Kids |
-| 80s | Sitcoms, Cartoons, Drama, Kids |
+| 70s | Movies, Sitcoms, Cartoons, Drama, Kids |
+| 80s | Movies, Sitcoms, Cartoons, Drama, Kids |
 | 90s | Shows, Sitcoms, Cartoons, Commercials, Bumpers, Kids |
 | 00s | Sitcoms, Cartoons, Drama, Kids |
 | 10s | Cartoons, Kids |
