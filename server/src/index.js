@@ -168,8 +168,7 @@ async function main() {
     console.log(`[Boot] HDHomeRun device ID: ${config.deviceId}`);
     console.log(`[Boot] Dashboard: http://${hostIp}:${config.port}`);
     console.log(`[Boot] EPG:       http://${hostIp}:${config.port}/epg.xml`);
-    console.log(`[Boot] M3U:       http://${hostIp}:${config.port}/lineup.m3u`);
-    console.log(`[Boot] Advertise: ${hostAddress}`);
+    console.log(`[Boot] M3U:       ${hostAddress}/lineup.m3u`);
   });
   // Streams are long-lived; never let Node time out an idle tuner connection.
   server.keepAliveTimeout = 0;
