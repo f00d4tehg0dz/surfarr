@@ -60,6 +60,7 @@ services:
       # - YTDLP_COOKIES=/app/server/db/cookies.txt
       # - YTDLP_EXTRA_ARGS=--extractor-args youtube:player_client=default
       # - YTDLP_PLAYLIST_LIMIT=1000
+      # - ADVERTISE_URL=https://surfarr.example.com
 
 volumes:
   retroarr-db:   # old name kept on purpose so upgrades from RetroArr keep their data
