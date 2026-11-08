@@ -22,12 +22,12 @@ router.get('/lineup.json', (req, res) => {
   const enabledChannels = db.data.channels.filter((ch) =>
     ch.enabled && (ch.isLive ? !!ch.liveVideoId : ch.cachedVideos && ch.cachedVideos.length > 0)
   );
-
+  const baseUrl = config.getAdvertiseUrl(config.port);
   const lineup = enabledChannels.map((ch) => ({
     GuideNumber: String(ch.channelNumber),
     GuideName: ch.name,
     HD: 1,
-    URL: `http://${hostIp}:${config.port}/stream/${ch.id}`,
+    URL: `${baseUrl}/stream/${ch.id}`,
   }));
 
   res.json(lineup);
