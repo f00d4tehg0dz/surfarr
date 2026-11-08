@@ -12,7 +12,7 @@ const { getDb } = require('../db/lowdb');
 router.get('/discover.json', (req, res) => {
   const db = getDb();
   const settings = db.data.settings;
-  const hostIp = config.getLocalIp();
+  const baseUrl = config.getAdvertiseUrl(config.port);
 
   res.json({
     FriendlyName: settings.deviceName || config.deviceName,
@@ -23,8 +23,8 @@ router.get('/discover.json', (req, res) => {
     FirmwareVersion: '20190621',
     DeviceID: config.deviceId,
     DeviceAuth: '',
-    BaseURL: `http://${hostIp}:${config.port}`,
-    LineupURL: `http://${hostIp}:${config.port}/lineup.json`,
+    BaseURL: `${baseUrl}`,
+    LineupURL: `${baseUrl}/lineup.json`,
   });
 });
 

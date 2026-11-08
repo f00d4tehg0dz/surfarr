@@ -104,6 +104,11 @@ function getLocalIp() {
   return fallback || '127.0.0.1';
 }
 
+function getAdvertiseUrl(port) {
+  if (process.env.ADVERTISE_URL) return process.env.ADVERTISE_URL.trim();
+  return `http://${getLocalIp()}:${port}`;
+}
+
 function envInt(name, def) {
   const v = parseInt(process.env[name], 10);
   return Number.isFinite(v) ? v : def;
@@ -185,6 +190,7 @@ const config = {
 
   platform: process.platform,
   getLocalIp,
+  getAdvertiseUrl,
   legacyDeviceId,
   freshDeviceId,
   isValidDeviceId,

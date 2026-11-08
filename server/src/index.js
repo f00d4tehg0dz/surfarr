@@ -83,17 +83,17 @@ async function main() {
   const hostIp = config.getLocalIp();
   const db = getDb();
   const tunerCount = () => db.data.settings.tunerCount || config.tunerCount;
-
+  const hostAddress = config.getAdvertiseUrl(config.port);
   if (config.enableHdhrDiscovery) {
     try {
-      initHdhrDiscovery({ hostIp, port: config.port, getDeviceId: () => config.deviceId, getTunerCount: tunerCount });
+      initHdhrDiscovery({ hostAddress, getDeviceId: () => config.deviceId, getTunerCount: tunerCount });
     } catch (err) {
       console.warn('[Boot] HDHomeRun discovery failed to start (non-fatal):', err.message);
     }
   }
   if (config.enableSsdp) {
     try {
-      initSSDP(hostIp, config.port, config.deviceId);
+      initSSDP(hostAddress, config.deviceId);
     } catch (err) {
       console.warn('[Boot] SSDP failed to start (non-fatal):', err.message);
     }
@@ -168,7 +168,7 @@ async function main() {
     console.log(`[Boot] HDHomeRun device ID: ${config.deviceId}`);
     console.log(`[Boot] Dashboard: http://${hostIp}:${config.port}`);
     console.log(`[Boot] EPG:       http://${hostIp}:${config.port}/epg.xml`);
-    console.log(`[Boot] M3U:       http://${hostIp}:${config.port}/lineup.m3u`);
+    console.log(`[Boot] M3U:       ${hostAddress}/lineup.m3u`);
   });
   // Streams are long-lived; never let Node time out an idle tuner connection.
   server.keepAliveTimeout = 0;

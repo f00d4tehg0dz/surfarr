@@ -152,10 +152,10 @@ function requestMatches(tags, ourId) {
 /**
  * Start listening for HDHomeRun discover requests.
  *
- * @param {{hostIp:string, port:number, getDeviceId:()=>string, getTunerCount:()=>number}} opts
+ * @param {{baseUrl:string, getDeviceId:()=>string, getTunerCount:()=>number}} opts
  * @returns {import('dgram').Socket|null}
  */
-function initHdhrDiscovery({ hostIp, port, getDeviceId, getTunerCount }) {
+function initHdhrDiscovery({ baseUrl, getDeviceId, getTunerCount }) {
   const socket = dgram.createSocket({ type: 'udp4', reuseAddr: true });
 
   socket.on('error', (err) => {
@@ -175,7 +175,6 @@ function initHdhrDiscovery({ hostIp, port, getDeviceId, getTunerCount }) {
     const ourId = parseInt(String(deviceId).replace(/[^0-9a-fA-F]/g, '').slice(0, 8) || '0', 16) >>> 0;
     if (!requestMatches(pkt.tags, ourId)) return;
 
-    const baseUrl = `http://${hostIp}:${port}`;
     const reply = buildDiscoverReply({
       deviceId,
       baseUrl,
@@ -189,7 +188,7 @@ function initHdhrDiscovery({ hostIp, port, getDeviceId, getTunerCount }) {
 
   socket.bind(HDHR_PORT, () => {
     try { socket.setBroadcast(true); } catch {}
-    console.log(`[HDHR] Discovery responder listening on UDP ${HDHR_PORT} — device ${getDeviceId()} at http://${hostIp}:${port}`);
+    console.log(`[HDHR] Discovery responder listening on UDP ${HDHR_PORT} — device ${getDeviceId()} at ${baseUrl}`);
   });
 
   return socket;

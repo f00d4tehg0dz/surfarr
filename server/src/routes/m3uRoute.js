@@ -20,14 +20,14 @@ router.get(['/playlist.m3u', '/lineup.m3u'], (req, res) => {
   const enabledChannels = db.data.channels.filter((ch) =>
     ch.enabled && (ch.isLive ? !!ch.liveVideoId : ch.cachedVideos && ch.cachedVideos.length > 0)
   );
-
-  let m3u = '#EXTM3U x-tvg-url="http://' + hostIp + ':' + config.port + '/epg.xml"\n\n';
+  const baseUrl = config.getAdvertiseUrl(config.port);
+  let m3u = '#EXTM3U x-tvg-url="'+baseUrl + '/epg.xml"\n\n';
 
   for (const ch of enabledChannels) {
     const group = ch.isLive ? 'Live' : ch.isPlugin ? 'Plugins' : ch.isStandalone ? 'Curated' : ch.decade || 'SurfArr';
     const name = String(ch.name).replace(/"/g, "'");
     m3u += `#EXTINF:-1 tvg-id="ch${ch.channelNumber}" tvg-name="${name}" tvg-chno="${ch.channelNumber}" group-title="${group}",${ch.name}\n`;
-    m3u += `http://${hostIp}:${config.port}/stream/${ch.id}\n\n`;
+    m3u += `${baseUrl}/stream/${ch.id}\n\n`;
   }
 
   res.setHeader('Content-Type', 'audio/x-mpegurl');
