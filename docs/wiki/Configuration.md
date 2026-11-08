@@ -29,6 +29,7 @@ SurfArr is configured with environment variables, set in your compose file, a `.
 |---|---|---|
 | `DEVICE_ID` | *auto* | 8-hex-character HDHomeRun ID. It's generated once and saved, so only set it to pin it. Changing it makes Plex see a "new" tuner |
 | `ADVERTISE_IP` | *auto* | LAN IP announced to media servers. Set it when you use Docker bridge networking |
+| `ADVERTISE_URL` | *unset* | Full base URL announced to media servers, e.g. `https://surfarr.example.com`. Set it when SurfArr sits behind a reverse proxy; overrides `ADVERTISE_IP` |
 | `ENABLE_HDHR_DISCOVERY` | `true` | HDHomeRun discovery responder (UDP 65001) |
 | `ENABLE_SSDP` | `true` | SSDP responder (UDP 1900) |
 

@@ -105,7 +105,7 @@ function getLocalIp() {
 }
 
 function getAdvertiseUrl(port) {
-  if (process.env.ADVERTISE_URL) return process.env.ADVERTISE_URL.trim();
+  if (process.env.ADVERTISE_URL) return process.env.ADVERTISE_URL.trim().replace(/\/+$/, '');
   return `http://${getLocalIp()}:${port}`;
 }
 
