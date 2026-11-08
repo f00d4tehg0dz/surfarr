@@ -83,7 +83,7 @@ async function main() {
   const hostIp = config.getLocalIp();
   const db = getDb();
   const tunerCount = () => db.data.settings.tunerCount || config.tunerCount;
-  const hostAddress = config.getAdvertiseHost(config.port);
+  const hostAddress = config.getAdvertiseUrl(config.port);
   if (config.enableHdhrDiscovery) {
     try {
       initHdhrDiscovery({ hostAddress, getDeviceId: () => config.deviceId, getTunerCount: tunerCount });
