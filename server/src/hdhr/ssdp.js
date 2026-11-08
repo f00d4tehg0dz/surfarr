@@ -17,12 +17,12 @@ const SSDP_ADDR = '239.255.255.250';
 const SSDP_PORT = 1900;
 const ANNOUNCE_INTERVAL_MS = 30000;
 
-function buildNotifyAlive(hostIp, port, deviceId) {
+function buildNotifyAlive(baseURL, deviceId) {
   return [
     'NOTIFY * HTTP/1.1',
     `HOST: ${SSDP_ADDR}:${SSDP_PORT}`,
     'CACHE-CONTROL: max-age=1800',
-    `LOCATION: http://${hostIp}:${port}/discover.json`,
+    `LOCATION: ${baseURL}/discover.json`,
     'NT: urn:schemas-upnp-org:device:MediaServer:1',
     'NTS: ssdp:alive',
     'SERVER: SurfArr/1.0 UPnP/1.0',
@@ -32,11 +32,11 @@ function buildNotifyAlive(hostIp, port, deviceId) {
   ].join('\r\n');
 }
 
-function buildSearchResponse(hostIp, port, deviceId) {
+function buildSearchResponse(baseURL, deviceId) {
   return [
     'HTTP/1.1 200 OK',
     'CACHE-CONTROL: max-age=1800',
-    `LOCATION: http://${hostIp}:${port}/discover.json`,
+    `LOCATION: ${baseURL}/discover.json`,
     'EXT:',
     'SERVER: SurfArr/1.0 UPnP/1.0',
     `USN: uuid:${deviceId}::urn:schemas-upnp-org:device:MediaServer:1`,
@@ -46,7 +46,7 @@ function buildSearchResponse(hostIp, port, deviceId) {
   ].join('\r\n');
 }
 
-function initSSDP(hostIp, port, deviceId) {
+function initSSDP(baseURL, deviceId) {
   const socket = dgram.createSocket({ type: 'udp4', reuseAddr: true });
 
   socket.on('error', (err) => {
@@ -67,7 +67,7 @@ function initSSDP(hostIp, port, deviceId) {
 
     if (!wantsUs) return;
 
-    const response = buildSearchResponse(hostIp, port, deviceId);
+    const response = buildSearchResponse(baseURL, deviceId);
     const buf = Buffer.from(response);
     // Respond directly to the requester (unicast)
     socket.send(buf, 0, buf.length, rinfo.port, rinfo.address, (err) => {
@@ -87,7 +87,7 @@ function initSSDP(hostIp, port, deviceId) {
     }
 
     const announce = () => {
-      const buf = Buffer.from(buildNotifyAlive(hostIp, port, deviceId));
+      const buf = Buffer.from(buildNotifyAlive(baseURL, deviceId));
       socket.send(buf, 0, buf.length, SSDP_PORT, SSDP_ADDR, (err) => {
         if (err) console.error('[SSDP] Announce error:', err.message);
       });
