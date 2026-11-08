@@ -2,6 +2,16 @@
 
 All notable changes to SurfArr. Docker images: `f00d4tehg0dz/surfarr:<version>` on Docker Hub and `ghcr.io/f00d4tehg0dz/surfarr:<version>`.
 
+## [2.1.0] - 2026-11-07
+
+### Added
+- **Reverse proxy support.** Set `ADVERTISE_URL` (for example `https://surfarr.example.com`) and the tuner's discovery, lineup, M3U playlist and SSDP / HDHomeRun announcements all point at that address instead of `http://<LAN IP>:8888`. Leave it unset to keep the old behavior. Thanks [@shopsD](https://github.com/shopsD) (#2).
+- **70s Movies and 80s Movies** channels are on.
+
+### Fixed
+- HDHomeRun UDP discovery replies advertised `undefined` as the base URL after the reverse proxy change; they now use the same address as `discover.json`.
+- A trailing `/` on `ADVERTISE_URL` no longer produces `//` in stream and lineup URLs.
+
 ## [2.0.0] - 2026-10-11
 
 The first tagged release, and the first under the SurfArr name (formerly RetroArr).

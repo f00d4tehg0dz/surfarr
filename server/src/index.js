@@ -86,7 +86,7 @@ async function main() {
   const hostAddress = config.getAdvertiseUrl(config.port);
   if (config.enableHdhrDiscovery) {
     try {
-      initHdhrDiscovery({ hostAddress, getDeviceId: () => config.deviceId, getTunerCount: tunerCount });
+      initHdhrDiscovery({ baseUrl: hostAddress, getDeviceId: () => config.deviceId, getTunerCount: tunerCount });
     } catch (err) {
       console.warn('[Boot] HDHomeRun discovery failed to start (non-fatal):', err.message);
     }

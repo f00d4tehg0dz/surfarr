@@ -50,7 +50,7 @@ Open `http://<your-ip>:8888`, give the first sync a minute, then add the tuner i
 
 On Windows or macOS (Docker Desktop), use `ports: ["8888:8888"]` instead of host networking and add the tuner by URL.
 
-`latest` follows the newest release. To stay on one version, pin a tag such as `f00d4tehg0dz/surfarr:2.0.0` (or `ghcr.io/f00d4tehg0dz/surfarr:2.0.0`). See [Releases](https://github.com/f00d4tehg0dz/surfarr/releases) for what changed.
+`latest` follows the newest release. To stay on one version, pin a tag such as `f00d4tehg0dz/surfarr:2.1.0` (or `ghcr.io/f00d4tehg0dz/surfarr:2.1.0`). See [Releases](https://github.com/f00d4tehg0dz/surfarr/releases) for what changed.
 
 ## Docs
 
