@@ -43,3 +43,4 @@ router.get('/lineup_status.json', (req, res) => {
 });
 
 module.exports = router;
+
