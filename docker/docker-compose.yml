@@ -33,6 +33,9 @@ services:
       # - ./cookies.txt:/app/server/db/cookies.txt:ro
     environment:
       # ── Required ────────────────────────────────────────────────
+      # Where the channels come from. Add your own API after a comma to use
+      # both (see docker-compose.selfhosted.yml):
+      #   https://retroarr-api.f00d.me,http://127.0.0.1:3001
       - REMOTE_API_URL=https://retroarr-api.f00d.me
       # ── Optional ────────────────────────────────────────────────
       - DEVICE_NAME=${DEVICE_NAME:-SurfArr}

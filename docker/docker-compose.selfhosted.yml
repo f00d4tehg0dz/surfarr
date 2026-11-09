@@ -1,0 +1,106 @@
+# SurfArr + your own API + MongoDB in one stack
+#
+# The regular docker-compose.yml only runs SurfArr and reads the public SurfArr
+# API. This one also runs the API server (api-server/) with its own MongoDB, so
+# you can build channels from your own lists.
+#
+#   docker compose -f docker-compose.selfhosted.yml up -d
+#   docker compose -f docker-compose.selfhosted.yml exec api node scripts/import-yaml.js
+#
+# Which lineup SurfArr uses is REMOTE_API_URL below:
+#   public API only   REMOTE_API_URL=https://retroarr-api.f00d.me
+#   your API only     REMOTE_API_URL=http://127.0.0.1:3001
+#   both (default)    REMOTE_API_URL=https://retroarr-api.f00d.me,http://127.0.0.1:3001
+# With both, channels and episodes are combined and the first API wins when
+# the two disagree. You can change the list later in Settings.
+#
+# Docker Desktop (Windows / macOS): host networking is not available. On the
+# surfarr service delete `network_mode: host`, uncomment `ports:` and
+# `networks:`, and use http://surfarr-api:3001 as your API address.
+
+services:
+  surfarr:
+    image: f00d4tehg0dz/surfarr:latest
+    container_name: surfarr
+    restart: unless-stopped
+    network_mode: host
+    # ports:
+    #   - "8888:8888"
+    #   - "65001:65001/udp"
+    #   - "1900:1900/udp"
+    # networks:
+    #   - surfarr-net
+    volumes:
+      - retroarr-db:/app/server/db
+    environment:
+      - REMOTE_API_URL=${REMOTE_API_URL:-https://retroarr-api.f00d.me,http://127.0.0.1:3001}
+      - DEVICE_NAME=${DEVICE_NAME:-SurfArr}
+      - STREAM_QUALITY=${STREAM_QUALITY:-720p}
+      - TUNER_COUNT=${TUNER_COUNT:-4}
+      - TZ=${TZ:-America/New_York}
+      - PORT=8888
+      - "HOUSE_RULE_MIN_MINUTES=Cartoons=6,Kids=6,Talk TV=5"
+      - YTDLP_AUTO_UPDATE=true
+      # - ADMIN_TOKEN=change-me
+      # - ADVERTISE_IP=192.168.1.50
+    depends_on:
+      api:
+        condition: service_healthy
+
+  api:
+    image: f00d4tehg0dz/surfarr-api:latest
+    # Building from a checkout instead of pulling: add --build to `up`
+    build:
+      context: ..
+      dockerfile: api-server/Dockerfile
+    container_name: surfarr-api
+    restart: unless-stopped
+    ports:
+      # Only this machine can reach the API. Use "3001:3001" to share it on your LAN.
+      - "127.0.0.1:3001:3001"
+    volumes:
+      # Your lists go here (format: api-server/yaml/README.md)
+      - ./yaml:/app/yaml
+      # - ./cookies.txt:/app/cookies.txt:ro
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/surfarr
+      - PORT=3001
+      # A channel turns on as soon as it has videos
+      - CHANNEL_GRID_MODE=auto
+      - TZ=${TZ:-America/New_York}
+      - "HOUSE_RULE_MIN_MINUTES=Cartoons=6,Kids=6,Talk TV=5"
+      - MAINTENANCE_ENABLED=true
+      # - YTDLP_COOKIES=/app/cookies.txt
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - surfarr-net
+
+  mongo:
+    image: mongo:7.0-jammy
+    container_name: surfarr-mongo
+    restart: unless-stopped
+    # Not published to the host: only the API container can reach it.
+    expose:
+      - "27017"
+    volumes:
+      - surfarr-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    networks:
+      - surfarr-net
+
+networks:
+  surfarr-net:
+    driver: bridge
+
+volumes:
+  retroarr-db:   # old name kept on purpose so upgrades from RetroArr keep their data
+    driver: local
+  surfarr-mongo-data:
+    driver: local

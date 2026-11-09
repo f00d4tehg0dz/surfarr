@@ -24,6 +24,14 @@ server/data/commercials/*.wmv
 # API server .env (contains API keys + Mongo credentials)
 api-server/.env
 
+# Self-hosted API: your own lists, proxy config, cookies and backups stay local
+api-server/yaml/*.yaml
+api-server/yaml/episode-titles/
+api-server/nginx.conf
+api-server/cookies.txt
+api-server/backups/
+docker/yaml/
+
 # Scripts .env (inherits from api-server)
 scripts/.env
 

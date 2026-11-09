@@ -1,0 +1,76 @@
+# SurfArr API + MongoDB
+#
+# Your own channel source for SurfArr. Start it, import your lists, then point
+# SurfArr at it (REMOTE_API_URL, or Settings in the dashboard):
+#
+#   docker compose up -d
+#   docker compose exec api node scripts/import-yaml.js
+#
+# Want SurfArr, the API and MongoDB in one stack? Use
+# docker/docker-compose.selfhosted.yml instead.
+
+services:
+  api:
+    image: f00d4tehg0dz/surfarr-api:latest
+    # Building from a checkout instead of pulling:  docker compose up -d --build
+    build:
+      context: ..
+      dockerfile: api-server/Dockerfile
+    container_name: surfarr-api
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      # Your playlist lists (see yaml/README.md)
+      - ./yaml:/app/yaml
+      # Optional: YouTube cookies (Netscape format) if imports hit a bot check
+      # - ./cookies.txt:/app/cookies.txt:ro
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/surfarr
+      - PORT=3001
+      # auto: a channel is on as soon as it has videos. static: the built-in list.
+      - CHANNEL_GRID_MODE=${CHANNEL_GRID_MODE:-auto}
+      - TRUST_PROXY=${TRUST_PROXY:-0}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - TZ=${TZ:-America/New_York}
+      # Content rules: no "compilation" videos, nothing under 15 min, except
+      # these categories' own minimums (commercials/bumpers/themes/trailers exempt)
+      - "HOUSE_RULE_MIN_MINUTES=${HOUSE_RULE_MIN_MINUTES:-Cartoons=6,Kids=6,Talk TV=5}"
+      # Daily check for removed / private videos (hour is UTC)
+      - MAINTENANCE_ENABLED=${MAINTENANCE_ENABLED:-true}
+      - MAINTENANCE_HOUR=${MAINTENANCE_HOUR:-4}
+      # - YTDLP_COOKIES=/app/cookies.txt
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - surfarr-api-net
+
+  mongo:
+    image: mongo:7.0-jammy
+    container_name: surfarr-mongo
+    restart: unless-stopped
+    # Not published to the host: only the API container can reach it. If you
+    # publish 27017, turn on authentication first (MONGO_INITDB_ROOT_USERNAME /
+    # MONGO_INITDB_ROOT_PASSWORD here, and the same user in MONGO_URI with
+    # ?authSource=admin).
+    expose:
+      - "27017"
+    volumes:
+      - surfarr-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    networks:
+      - surfarr-api-net
+
+networks:
+  surfarr-api-net:
+    driver: bridge
+
+volumes:
+  surfarr-mongo-data:
+    driver: local

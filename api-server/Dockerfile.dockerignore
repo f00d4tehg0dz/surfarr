@@ -1,0 +1,13 @@
+# Build context is the repo root; only api-server/ and plugin-repo/ are needed.
+*
+!api-server
+!plugin-repo
+
+**/node_modules
+**/.env
+**/.env.*
+!**/.env.example
+api-server/nginx.conf
+api-server/backups
+api-server/yaml/episode-titles
+**/*.log

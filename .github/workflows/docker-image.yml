@@ -24,7 +24,7 @@ jobs:
           node-version: 22
       - name: Lint server (syntax)
         run: |
-          for f in $(find server/src -name '*.js'); do node --check "$f"; done
+          for f in $(find server/src api-server/src api-server/scripts -name '*.js'); do node --check "$f"; done
           if grep -q $'\r' docker/entrypoint.sh; then echo "entrypoint.sh has CRLF line endings"; exit 1; fi
 
       - name: Set up QEMU (arm64 builds for ARM NAS / Raspberry Pi)
@@ -53,3 +53,18 @@ jobs:
             f00d4tehg0dz/retroarr:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      # The self-hosted API (api-server/). Built from the repo root so the
+      # plugin packs are included; api-server/Dockerfile.dockerignore trims the context.
+      - name: Build (and push on main) the API image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: api-server/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name == 'push' }}
+          tags: |
+            f00d4tehg0dz/surfarr-api:latest
+            f00d4tehg0dz/surfarr-api:${{ github.sha }}
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api

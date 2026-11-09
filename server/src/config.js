@@ -130,6 +130,28 @@ function splitArgs(str) {
   return out;
 }
 
+// REMOTE_API_URL may list several APIs: "https://a.example, http://my-api:3001".
+// Commas, spaces or new lines all work. Order is priority (see remoteClient.js).
+function parseApiUrls(value) {
+  const out = [];
+  for (const raw of String(value || '').split(/[\s,;]+/)) {
+    const candidate = raw.trim().replace(/\/+$/, '');
+    if (!candidate) continue;
+    let ok = false;
+    try { ok = /^https?:$/.test(new URL(candidate).protocol); } catch { /* not a URL */ }
+    if (ok && !out.includes(candidate)) out.push(candidate);
+  }
+  return out;
+}
+
+// The part of the input parseApiUrls() would throw away (for error messages)
+function invalidApiUrls(value) {
+  const good = parseApiUrls(value);
+  return String(value || '').split(/[\s,;]+/).map((s) => s.trim().replace(/\/+$/, '')).filter((s) => s && !good.includes(s));
+}
+
+const envRemoteApiUrls = parseApiUrls([process.env.REMOTE_API_URL, process.env.REMOTE_API_URLS].filter(Boolean).join(','));
+
 // ---------------------------------------------------------------------------
 // External binaries
 // ---------------------------------------------------------------------------
@@ -145,7 +167,10 @@ if (cookiesFile && !fs.existsSync(cookiesFile)) {
 const config = {
   port: envInt('PORT', 8888),
   host: process.env.HOST || '0.0.0.0',
-  remoteApiUrl: process.env.REMOTE_API_URL || '',
+  // Every metadata API to read from, in priority order. Starts as
+  // REMOTE_API_URL; a list saved in the dashboard replaces it (lowdb.js).
+  remoteApiUrls: envRemoteApiUrls.slice(),
+  envRemoteApiUrls,
 
   // Seed only — lowdb.js replaces this with the persisted value at boot.
   deviceId: process.env.DEVICE_ID ? process.env.DEVICE_ID.toUpperCase() : freshDeviceId(),
@@ -189,11 +214,24 @@ const config = {
   cacheRefreshHours: envInt('CACHE_REFRESH_HOURS', 24),
 
   platform: process.platform,
+  parseApiUrls,
+  invalidApiUrls,
   getLocalIp,
   getAdvertiseUrl,
   legacyDeviceId,
   freshDeviceId,
   isValidDeviceId,
+};
+
+// The first API, for code that only needs to know "is one configured".
+Object.defineProperty(config, 'remoteApiUrl', {
+  enumerable: true,
+  get() { return this.remoteApiUrls[0] || ''; },
+});
+
+config.setRemoteApiUrls = function setRemoteApiUrls(list) {
+  this.remoteApiUrls = parseApiUrls(Array.isArray(list) ? list.join(',') : list);
+  return this.remoteApiUrls;
 };
 
 module.exports = config;

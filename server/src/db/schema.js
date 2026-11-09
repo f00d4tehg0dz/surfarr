@@ -7,7 +7,10 @@ const { buildChannelGrid } = require('../channels/channelGrid');
 function getDefaultSchema() {
   return {
     settings: {
+      // Shown in the dashboard. Mirrors REMOTE_API_URL until a different list
+      // is saved there (remoteApiUrlCustom), which then takes over.
       remoteApiUrl: process.env.REMOTE_API_URL || '',
+      remoteApiUrlCustom: false,
       deviceName: process.env.DEVICE_NAME || 'SurfArr',
       streamQuality: process.env.STREAM_QUALITY || '720p',
       tunerCount: parseInt(process.env.TUNER_COUNT, 10) || 4,
