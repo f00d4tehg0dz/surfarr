@@ -10,7 +10,10 @@
 const DEFAULT_LIMIT = 1500;
 const MAX_LIMIT = 3000;
 
-function hashString(str) {
+function hashString(input) {
+  // Always a plain, bounded string: the key is built from request values
+  // ("90s|Cartoons|2971"), so never loop over whatever .length a caller sends.
+  const str = String(input).slice(0, 256);
   let h = 2166136261;
   for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
   return h >>> 0;

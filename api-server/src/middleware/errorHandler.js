@@ -9,6 +9,15 @@ function validateQuery(schema) {
     for (const [key, rules] of Object.entries(schema)) {
       const val = req.query[key];
 
+      // ?decade=a&decade=b arrives as an array and ?decade[$ne]=x as an object.
+      // Only a single plain string is ever valid here.
+      if (val !== undefined && typeof val !== 'string') {
+        return res.status(400).json({
+          error: 'Bad Request',
+          message: `Query parameter ${key} must be a single value`,
+        });
+      }
+
       if (rules.required && !val) {
         return res.status(400).json({
           error: 'Bad Request',

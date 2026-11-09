@@ -12,8 +12,10 @@ router.get('/', async (req, res, next) => {
   try {
     const { decade, category } = req.query;
     const filter = {};
-    if (decade) filter.decade = decade;
-    if (category) filter.category = category;
+    // Plain strings only, compared with $eq, so a query like ?decade[$ne]=x
+    // can never become a MongoDB operator.
+    if (typeof decade === 'string' && decade) filter.decade = { $eq: decade };
+    if (typeof category === 'string' && category) filter.category = { $eq: category };
 
     const playlists = await Playlist.find(filter)
       .select('playlistId showName decade category videoCount lastImported')

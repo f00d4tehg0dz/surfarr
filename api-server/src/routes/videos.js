@@ -43,7 +43,7 @@ router.get(
         return res.json([]);
       }
 
-      const filter = { decade, category, excluded: { $ne: true } };
+      const filter = { decade: { $eq: String(decade) }, category: { $eq: String(category) }, excluded: { $ne: true } };
       if (includeDeadVideos !== 'true') {
         filter.isDead = false;
       }
@@ -97,7 +97,7 @@ router.get(
       if (await lineup.isGridDisabled(decade, category)) {
         return res.json([]);
       }
-      const videos = await Video.find({ decade, category, isDead: false, excluded: { $ne: true } })
+      const videos = await Video.find({ decade: { $eq: String(decade) }, category: { $eq: String(category) }, isDead: false, excluded: { $ne: true } })
         .select('id duration')
         .lean();
       res.json(videos);

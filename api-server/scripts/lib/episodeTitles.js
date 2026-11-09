@@ -21,16 +21,30 @@ function cached(show) {
   try { return JSON.parse(fs.readFileSync(cachePath(show), 'utf8')); } catch { return null; }
 }
 
+// Remove a pattern until there is nothing left of it: one pass over
+// "<!-<!-- x -->- y -->" would leave a new "<!-- y -->" behind.
+function stripAll(s, re) {
+  let prev;
+  do {
+    prev = s;
+    s = s.replace(re, '');
+  } while (s !== prev);
+  return s;
+}
+
 function cleanWiki(s) {
-  return s
-    .replace(/<!--[\s\S]*?-->/g, '')
+  let out = stripAll(String(s), /<!--[\s\S]*?-->/g)
     .replace(/<ref[^>]*\/>|<ref[^>]*>[\s\S]*?<\/ref>/g, '')
     // footnote templates carry notes ("Working title: …"), not titles
     .replace(/\{\{\s*(efn|refn|sfn|notetag|note|cn|citation needed|anchor)[^{}]*\}\}/gi, '')
     .replace(/<br\s*\/?>|<hr\s*\/?>/gi, ' / ')
     .replace(/\{\{[^{}]*\|([^{}|]+)\}\}/g, '$1')
     .replace(/\[\[(?:[^\]|]*\|)?([^\]]+)\]\]/g, '$1')
-    .replace(/'{2,}/g, '').replace(/<[^>]+>/g, '')
+    .replace(/'{2,}/g, '');
+  // Tags go until none are left; a stray < or > after that is the rest of a
+  // broken tag, never part of a title.
+  out = stripAll(out, /<[^>]+>/g).replace(/[<>]/g, '');
+  return out
     .replace(/"\s*"/g, '" / "') // "Segment A""Segment B"
     .trim();
 }
