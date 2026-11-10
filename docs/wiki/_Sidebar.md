@@ -10,6 +10,7 @@
 - [Plugins](Plugins)
 - [Commercials](Commercials)
 - [Watch Online](Watch-Online)
+- [Self-Hosting the API](Self-Hosting-the-API)
 
 **Reference**
 - [Configuration](Configuration)

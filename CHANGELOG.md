@@ -2,6 +2,22 @@
 
 All notable changes to SurfArr. Docker images: `f00d4tehg0dz/surfarr:<version>` on Docker Hub and `ghcr.io/f00d4tehg0dz/surfarr:<version>`.
 
+## [Unreleased]
+
+### Added
+- **Self-hosted API.** The API server that feeds SurfArr its channels is now in this repo under `api-server/`, with MongoDB and Docker. Run your own, drop your playlist lists in a folder, import them, and a channel turns on as soon as it has episodes. Image: `f00d4tehg0dz/surfarr-api`.
+- **More than one channel source.** `REMOTE_API_URL` takes several addresses separated by commas, so you can use the public API, your own, or both at once. Lineups and episodes are combined, the first address wins when two disagree, and if one API is down its channels stay on with what was last synced.
+- **Channel sources in Settings.** Edit the list in the dashboard, one address per line, and see which sources are online. Saving a new list starts a sync.
+- `docker/docker-compose.selfhosted.yml` runs SurfArr, the API and MongoDB as one stack.
+- A wiki page: Self-Hosting the API.
+
+### Changed
+- Plugin channels that live on an API are picked up on every sync, not only at startup.
+- **Sync Now** always asks the API again. Before, a second sync within a day could reuse the earlier answer for the decade channels.
+
+### Fixed
+- The API address in Settings was saved but never used. It works now.
+
 ## [2.1.0] - 2026-11-07
 
 ### Added

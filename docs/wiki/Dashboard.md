@@ -40,7 +40,7 @@ Plugins is the add-on store: community channel packs you can install with one cl
 
 - **Access**: enter your admin key here if you've set `ADMIN_TOKEN` (see [Configuration](Configuration#security)).
 - **Status**: when the last sync ran and how many channels are active.
-- **Remote API URL**: where the lineup comes from (default `https://retroarr-api.f00d.me`).
+- **Channel sources**: the API addresses the lineup comes from, one per line (default `https://retroarr-api.f00d.me`). Add [your own API](Self-Hosting-the-API) to use it instead of the public one or next to it. Each source shows whether it's online.
 - **Device Name**: the tuner name your media server shows.
 - **Stream Quality**: 360p, 480p, 720p or 1080p.
 - **Tuner Count**: how many channels can stream at once.

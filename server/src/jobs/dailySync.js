@@ -2,8 +2,9 @@
 
 // Daily sync job: refreshes channel.cachedVideos[] in LowDB.
 //
-//   Grid + standalone channels → remote SurfArr API (curated metadata)
-//   Plugin channels            → remote API first, then yt-dlp against the
+//   Grid + standalone channels → the SurfArr API(s) in REMOTE_API_URL
+//                                (curated metadata; several APIs are merged)
+//   Plugin channels            → API(s) first, then yt-dlp against the
 //                                plugin's own YAML sources (playlists, channels
 //                                or single videos) as the fallback
 //
@@ -22,6 +23,7 @@ const { STANDALONE_CHANNELS } = require('../channels/channelGrid');
 const { refreshRemoteConfig } = require('../channels/remoteConfig');
 const { reconcileChannels, remotePluginChannels } = require('../channels/reconcile');
 const { loadPlugins } = require('../plugins/pluginLoader');
+const { resolveRemotePlugins } = require('../channels/remotePlugins');
 
 // id → slug lookup for standalone channels, sourced from the shared registry
 // so this file stays in sync when new standalone channels are added.
@@ -127,6 +129,33 @@ async function syncPluginChannel(channel) {
   return applyVideos(channel, allVideos);
 }
 
+// Fetch a built-in channel's videos from every API that carries it.
+// → the remoteClient "detailed" shape: { videos, okCount, failCount, results }
+function fetchFromApis(channel) {
+  const standaloneSlug = channel.standaloneSlug || STANDALONE_ID_TO_SLUG.get(channel.id);
+  if (standaloneSlug) return remoteClient.fetchStandaloneVideosDetailed(standaloneSlug, channel.apis);
+  if (channel.isPlugin) {
+    return remoteClient.fetchPluginVideosDetailed(channel.id.replace(/^ch-plugin-/, ''), channel.apis);
+  }
+  return remoteClient.fetchChannelVideosDetailed(channel.decade, channel.category, channel.apis);
+}
+
+function describeFailure(detail) {
+  return detail.results
+    .filter((r) => !r.ok)
+    .map((r) => (detail.results.length > 1 ? `${r.api}: ${r.error}` : r.error))
+    .join('; ');
+}
+
+// When one of several APIs didn't answer, keep the videos we already had that
+// the others didn't return, so that API's shows stay on air until it is back.
+function withPrevious(channel, detail) {
+  if (!detail.failCount) return detail.videos;
+  const have = new Set(detail.videos.map((v) => v.id || v.videoId));
+  const kept = (channel.cachedVideos || []).filter((v) => !v.isLive && !have.has(v.id));
+  return [...detail.videos, ...kept];
+}
+
 async function runDailySync() {
   if (syncInProgress) {
     return { skipped: true, reason: 'sync already in progress' };
@@ -139,12 +168,25 @@ async function runDailySync() {
   let errorCount = 0;
 
   try {
+    // A sync always asks the API(s) again (the in-memory cache only spares
+    // repeat lookups between syncs).
+    memCache.invalidate();
+
     // Step 0: pull the latest channel definitions (grid, standalone, live)
-    // so a channel added or renumbered on the API shows up here without a
+    // so a channel added or renumbered on an API shows up here without a
     // restart. Live stream IDs also rotate — this is where they refresh.
     try {
       const { remoteConfig, source } = await refreshRemoteConfig(db);
-      const r = reconcileChannels(db.data.channels, [...loadPlugins(), ...remotePluginChannels(db.data.channels)], remoteConfig);
+      const localPlugins = loadPlugins();
+      // Plugin channels hosted on an API can come and go too. If that lookup
+      // itself breaks, keep the ones we have.
+      let remotePlugins;
+      try {
+        remotePlugins = await resolveRemotePlugins(db.data.channels, localPlugins, remoteConfig, { quiet: true });
+      } catch {
+        remotePlugins = remotePluginChannels(db.data.channels);
+      }
+      const r = reconcileChannels(db.data.channels, [...localPlugins, ...remotePlugins], remoteConfig);
       db.data.channels = r.channels;
       if (r.added || r.removed) console.log(`[Sync] Lineup from ${source}: +${r.added} / -${r.removed} channels`);
     } catch (err) {
@@ -157,22 +199,25 @@ async function runDailySync() {
       // Live channels carry their single stream in cachedVideos already
       if (channel.isLive) continue;
 
-      // Standalone channels: api-server's /videos/channel/:slug already handles
-      // the curated-then-decade/category fallback internally.
+      // Standalone channels: the API's /videos/channel/:slug serves the
+      // curated list (or the matching plugin pack).
       const standaloneSlug = channel.standaloneSlug || STANDALONE_ID_TO_SLUG.get(channel.id);
       if (standaloneSlug) {
         try {
-          const videos = await remoteClient.fetchStandaloneVideos(standaloneSlug);
-          if (videos && videos.length > 0) {
+          const detail = await fetchFromApis(channel);
+          if (detail.okCount === 0) throw new Error(describeFailure(detail) || 'no API answered');
+          if (detail.failCount) console.warn(`[Sync] Standalone "${channel.name}": partial answer (${describeFailure(detail)})`);
+          const videos = withPrevious(channel, detail);
+          if (videos.length > 0) {
             const n = applyVideos(channel, videos);
             const missing = countMissingDuration(channel.cachedVideos);
             const warn = missing > 0 ? ` (${missing} missing duration, will be skipped)` : '';
             console.log(`[Sync] Standalone "${channel.name}": ${n} videos${warn}`);
             syncedCount++;
           } else {
-            // An empty answer is authoritative (the API no longer falls back
-            // to decade filler) — drop stale content so the channel hides
-            // from the lineup instead of playing the wrong show.
+            // An empty answer from every API is authoritative (the API no
+            // longer falls back to decade filler) — drop stale content so the
+            // channel hides from the lineup instead of playing the wrong show.
             if ((channel.cachedVideos || []).length) console.warn(`[Sync] Standalone "${channel.name}": API has no videos — clearing ${channel.cachedVideos.length} stale entries`);
             applyVideos(channel, []);
           }
@@ -183,13 +228,13 @@ async function runDailySync() {
         continue;
       }
 
-      // Plugin channels: try remote API first, fall back to yt-dlp
+      // Plugin channels: try the API(s) first, fall back to yt-dlp
       if (channel.isPlugin) {
-        const pluginId = channel.id.replace(/^ch-plugin-/, '');
         let fromApi = false;
         try {
-          const videos = await remoteClient.fetchPluginVideos(pluginId);
-          if (videos && videos.length > 0) {
+          const detail = await fetchFromApis(channel);
+          const videos = detail.okCount ? withPrevious(channel, detail) : [];
+          if (detail.videos.length > 0) {
             const n = applyVideos(channel, videos);
             console.log(`[Sync] Plugin "${channel.name}": ${n} videos from API`);
             pluginSyncedCount++;
@@ -211,12 +256,16 @@ async function runDailySync() {
         continue;
       }
 
-      // Grid channels: sync from remote API
+      // Grid channels: sync from the API(s)
       let videos = memCache.get(channel.decade, channel.category);
       if (!videos) {
         try {
-          videos = await remoteClient.fetchChannelVideos(channel.decade, channel.category);
-          memCache.set(channel.decade, channel.category, videos);
+          const detail = await fetchFromApis(channel);
+          if (detail.okCount === 0) throw new Error(describeFailure(detail) || 'no API answered');
+          if (detail.failCount) console.warn(`[Sync] ${channel.id}: partial answer (${describeFailure(detail)})`);
+          videos = withPrevious(channel, detail);
+          // Only a complete answer is worth remembering
+          if (!detail.failCount) memCache.set(channel.decade, channel.category, videos);
         } catch (err) {
           console.error(`[Sync] Failed for ${channel.id}: ${err.message}`);
           errorCount++;
@@ -261,11 +310,10 @@ async function syncChannel(channelId) {
   if (!channel) throw new Error(`Channel ${channelId} not found`);
 
   if (channel.isPlugin) {
-    const pluginId = channel.id.replace(/^ch-plugin-/, '');
     try {
-      const videos = await remoteClient.fetchPluginVideos(pluginId);
-      if (videos && videos.length > 0) {
-        const n = applyVideos(channel, videos);
+      const detail = await fetchFromApis(channel);
+      if (detail.videos.length > 0) {
+        const n = applyVideos(channel, withPrevious(channel, detail));
         await db.write();
         return { source: 'api', count: n };
       }
@@ -278,11 +326,9 @@ async function syncChannel(channelId) {
   }
 
   if (channel.isLive) return { source: 'live', count: channel.cachedVideos.length };
-  const standaloneSlug = channel.standaloneSlug || STANDALONE_ID_TO_SLUG.get(channel.id);
-  const videos = standaloneSlug
-    ? await remoteClient.fetchStandaloneVideos(standaloneSlug)
-    : await remoteClient.fetchChannelVideos(channel.decade, channel.category);
-  const n = applyVideos(channel, videos || []);
+  const detail = await fetchFromApis(channel);
+  if (detail.okCount === 0) throw new Error(describeFailure(detail) || 'no API answered');
+  const n = applyVideos(channel, withPrevious(channel, detail));
   await db.write();
   return { source: 'api', count: n };
 }

@@ -9,10 +9,10 @@ const path = require('path');
 const fs = require('fs');
 const config = require('../config');
 const { getDefaultSchema } = require('./schema');
-const { reconcileChannels, expectedBuiltins } = require('../channels/reconcile');
+const { reconcileChannels } = require('../channels/reconcile');
 const { refreshRemoteConfig } = require('../channels/remoteConfig');
 const { loadPlugins } = require('../plugins/pluginLoader');
-const { fetchPluginChannels } = require('../api/remoteClient');
+const { resolveRemotePlugins } = require('../channels/remotePlugins');
 
 let db = null;
 
@@ -74,6 +74,23 @@ async function initDb() {
   // The dashboard setting wins over the env default for the ffmpeg scaler
   if (db.data.settings.streamQuality) config.streamQuality = db.data.settings.streamQuality;
 
+  // Which metadata API(s) to read. REMOTE_API_URL is the default; a list
+  // saved from the dashboard (remoteApiUrlCustom) replaces it until cleared.
+  const savedApis = db.data.settings.remoteApiUrlCustom ? config.parseApiUrls(db.data.settings.remoteApiUrl) : [];
+  if (savedApis.length) {
+    config.setRemoteApiUrls(savedApis);
+  } else {
+    const fromEnv = config.envRemoteApiUrls.join(', ');
+    if (db.data.settings.remoteApiUrl !== fromEnv || db.data.settings.remoteApiUrlCustom) {
+      db.data.settings.remoteApiUrl = fromEnv;
+      db.data.settings.remoteApiUrlCustom = false;
+      dirty = true;
+    }
+  }
+  if (config.remoteApiUrls.length > 1) {
+    console.log(`[DB] Channel sources (${config.remoteApiUrls.length}): ${config.remoteApiUrls.join(', ')}`);
+  }
+
   const deviceId = resolveDeviceId(isFirstBoot);
   if (db.data.deviceId !== deviceId) {
     db.data.deviceId = deviceId;
@@ -91,39 +108,13 @@ async function initDb() {
   // preserve existing data (cachedVideos, settings, enabled) for channels that stay.
   const localPlugins = loadPlugins();
 
-  // Also fetch plugin channels from the remote API (non-blocking on failure)
+  // Also fetch plugin channels from the API(s) (non-blocking on failure)
   let remotePlugins = [];
   try {
-    const apiPlugins = await fetchPluginChannels();
-    remotePlugins = (apiPlugins || [])
-      .filter((p) => p && p.pluginId && !localPlugins.some((lp) => lp.id === `ch-plugin-${p.pluginId}`))
-      .map((p) => ({
-        id: `ch-plugin-${p.pluginId}`,
-        name: p.name,
-        channelNumber: p.channelNumber,
-        isPlugin: true,
-        enabled: true,
-        settings: p.settings || { shuffle: true, includeCommercials: false },
-        cachedVideos: [],
-        lastVideoSync: null,
-        pluginConfig: { videoSources: [] },
-      }));
+    remotePlugins = await resolveRemotePlugins(db.data.channels, localPlugins, remoteConfig);
   } catch (err) {
     console.warn(`[DB] Could not fetch remote plugin channels (${err.message}) — continuing with local plugins only`);
   }
-
-  // The plugin repo mirrors several curated (standalone) channels — same
-  // content, same number. Skip remote plugins that duplicate a built-in
-  // channel instead of listing the channel twice under a second number.
-  const builtins = expectedBuiltins(remoteConfig).channels;
-  const builtinNumbers = new Set(builtins.map((c) => c.channelNumber));
-  const builtinSlugs = new Set(builtins.map((c) => c.standaloneSlug || c.liveSlug).filter(Boolean));
-  remotePlugins = remotePlugins.filter((p) => {
-    const slug = p.id.replace(/^ch-plugin-/, '');
-    const dup = builtinSlugs.has(slug) || builtinNumbers.has(p.channelNumber);
-    if (dup) console.log(`[DB] Skipping remote plugin "${p.name}" — duplicates built-in channel ${p.channelNumber}`);
-    return !dup;
-  });
 
   const result = reconcileChannels(db.data.channels, [...localPlugins, ...remotePlugins], remoteConfig);
   const liveCount = result.channels.filter((c) => c.isLive).length;

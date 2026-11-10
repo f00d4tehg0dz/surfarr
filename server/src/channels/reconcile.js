@@ -44,6 +44,8 @@ function fromRemoteGridEntry(c) {
     ch.standaloneSlug = c.standaloneSlug || c.id.replace(/^ch-/, '');
     ch.isStandalone = true;
   }
+  // Which API(s) carry this channel — the sync job fetches its videos there
+  if (Array.isArray(c.apis) && c.apis.length) ch.apis = c.apis;
   return ch;
 }
 
@@ -122,6 +124,8 @@ function reconcileChannels(existingChannels, pluginChannels, remoteConfig) {
       settings: { ...(expected.settings || {}), ...(existing.settings || {}) },
       cachedVideos: Array.isArray(existing.cachedVideos) ? existing.cachedVideos : [],
     };
+    if (Array.isArray(expected.apis) && expected.apis.length) merged.apis = expected.apis;
+    else delete merged.apis;
     if (expected.standaloneSlug) {
       merged.standaloneSlug = expected.standaloneSlug;
       merged.isStandalone = true;

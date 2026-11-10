@@ -59,6 +59,8 @@ To add your own live channel, drop a JSON file in your `plugins/` folder:
 
 The lineup comes from the **SurfArr API** (`REMOTE_API_URL`). SurfArr syncs it at startup and every night at 3 AM. You can also press **Sync Now** in [Settings](Dashboard#settings).
 
+Want your own channels? [Host the API yourself](Self-Hosting-the-API) and use it instead of the public one, or next to it.
+
 - **YouTube** full-episode playlists make up most channels.
 - **Internet Archive**: shows YouTube doesn't have stream straight from archive.org, mixed into the same channels. Many shows have both sources.
 - **Bucketed by show**: a show with several playlists or sources doesn't get extra airtime because of it.

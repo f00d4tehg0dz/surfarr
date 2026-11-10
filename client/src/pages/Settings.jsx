@@ -28,6 +28,17 @@ function AccessPanel() {
   );
 }
 
+// "a, b" / one per line → clean list
+function splitApis(text) {
+  return String(text || '').split(/[\s,;]+/).map((s) => s.trim()).filter(Boolean);
+}
+
+const SOURCE_STATE = {
+  api: { label: 'Online', className: 'text-m3-success' },
+  cache: { label: 'Unreachable, using saved lineup', className: 'text-m3-error' },
+  down: { label: 'Unreachable', className: 'text-m3-error' },
+};
+
 export default function Settings() {
   const { data: settings, isLoading } = useSettings();
   const { mutate: updateSettings, isPending: isSaving } = useUpdateSettings();
@@ -43,7 +54,7 @@ export default function Settings() {
   useEffect(() => {
     if (settings) {
       setForm({
-        remoteApiUrl: settings.remoteApiUrl || '',
+        remoteApiUrl: (settings.remoteApiUrls?.length ? settings.remoteApiUrls : splitApis(settings.remoteApiUrl)).join('\n'),
         deviceName: settings.deviceName || 'SurfArr',
         streamQuality: settings.streamQuality || '720p',
         tunerCount: settings.tunerCount || 4,
@@ -53,7 +64,7 @@ export default function Settings() {
 
   function handleSave(e) {
     e.preventDefault();
-    updateSettings(form);
+    updateSettings({ ...form, remoteApiUrl: splitApis(form.remoteApiUrl).join(', ') });
   }
 
   if (isLoading) return (
@@ -105,17 +116,35 @@ export default function Settings() {
         </h2>
 
         <div>
-          <label className="label">Remote API URL</label>
-          <input
-            className="input"
-            type="url"
-            placeholder="https://retroarr-api.f00d.me"
+          <label className="label">Channel sources (API URLs)</label>
+          <textarea
+            className="input font-mono text-sm"
+            rows={Math.max(2, splitApis(form.remoteApiUrl).length + 1)}
+            spellCheck={false}
+            placeholder={'https://retroarr-api.f00d.me\nhttp://your-own-api:3001'}
             value={form.remoteApiUrl}
             onChange={(e) => setForm((f) => ({ ...f, remoteApiUrl: e.target.value }))}
           />
           <p className="text-xs text-m3-muted mt-1.5">
-            Endpoint for video metadata.
+            One per line. Use the SurfArr API, your own self-hosted API, or both: channels and episodes from every
+            source are combined, and the first one wins when two disagree. Leave it empty to go back to the
+            default{settings?.remoteApiDefault?.length ? ` (${settings.remoteApiDefault.join(', ')})` : ''}. Saving a new list starts a sync.
           </p>
+          {settings?.remoteApiSources?.length > 0 && (
+            <ul className="mt-2 space-y-1">
+              {settings.remoteApiSources.map((s) => {
+                const state = SOURCE_STATE[s.state] || SOURCE_STATE.down;
+                return (
+                  <li key={s.api} className="flex justify-between gap-3 text-xs">
+                    <span className="text-m3-text truncate">{s.api}</span>
+                    <span className={`shrink-0 ${state.className}`}>
+                      {state.label}{s.channels ? ` · ${s.channels} channels` : ''}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
 
         <div>
@@ -164,7 +193,7 @@ export default function Settings() {
           Data Sync
         </h2>
         <p className="text-sm text-m3-muted">
-          Pull the latest video data from your remote API. Runs automatically at 3 AM daily.
+          Pull the latest channels and episodes from your channel sources. Runs automatically at 3 AM daily.
         </p>
 
         <button

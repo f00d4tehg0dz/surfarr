@@ -11,7 +11,7 @@ SurfArr is configured with environment variables, set in your compose file, a `.
 | `TUNER_COUNT` | `4` | How many channels can stream at once |
 | `TZ` | `America/New_York` | Timezone for the guide and the nightly jobs |
 | `PORT` | `8888` | HTTP port for the dashboard, tuner and playlists |
-| `REMOTE_API_URL` | `https://retroarr-api.f00d.me` | Where the channel lineup comes from |
+| `REMOTE_API_URL` | `https://retroarr-api.f00d.me` | Where the channel lineup comes from. One API address, or several separated by commas to combine the public API with [your own](Self-Hosting-the-API). The first one wins when two disagree |
 | `CACHE_REFRESH_HOURS` | `24` | How often to refresh from the API |
 
 ## Content

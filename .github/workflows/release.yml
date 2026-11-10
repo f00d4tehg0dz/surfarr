@@ -64,6 +64,23 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Build and push the API image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: api-server/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            f00d4tehg0dz/surfarr-api:${{ steps.v.outputs.version }}
+            f00d4tehg0dz/surfarr-api:${{ steps.v.outputs.minor }}
+            f00d4tehg0dz/surfarr-api:latest
+            ghcr.io/f00d4tehg0dz/surfarr-api:${{ steps.v.outputs.version }}
+            ghcr.io/f00d4tehg0dz/surfarr-api:${{ steps.v.outputs.minor }}
+            ghcr.io/f00d4tehg0dz/surfarr-api:latest
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
+
       - name: Release notes from CHANGELOG.md
         run: |
           awk -v v="${{ steps.v.outputs.version }}" '

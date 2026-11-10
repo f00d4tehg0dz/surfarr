@@ -59,6 +59,7 @@ The [wiki](https://github.com/f00d4tehg0dz/surfarr/wiki) covers everything else:
 - [Installation](https://github.com/f00d4tehg0dz/surfarr/wiki/Installation): Docker, NAS, manual install, and upgrading from RetroArr
 - [Connecting your media server](https://github.com/f00d4tehg0dz/surfarr/wiki/Connecting-Media-Servers)
 - [Configuration](https://github.com/f00d4tehg0dz/surfarr/wiki/Configuration): every environment variable
+- [Self-hosting the API](https://github.com/f00d4tehg0dz/surfarr/wiki/Self-Hosting-the-API): run your own channel source with MongoDB, alone or next to the public one
 - [Channels](https://github.com/f00d4tehg0dz/surfarr/wiki/Channels), [Dashboard](https://github.com/f00d4tehg0dz/surfarr/wiki/Dashboard), [Plugins](https://github.com/f00d4tehg0dz/surfarr/wiki/Plugins), [Commercials](https://github.com/f00d4tehg0dz/surfarr/wiki/Commercials)
 - [Troubleshooting](https://github.com/f00d4tehg0dz/surfarr/wiki/Troubleshooting)
 

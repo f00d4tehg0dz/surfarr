@@ -1,0 +1,5 @@
+# Example live list. Copy to live-channels.yaml.
+# Format:  [channel number] - [Name] - https://www.youtube.com/live/<id>
+# Numbers default to 200, 201, ... in file order.
+#
+# 200 - Channel Name - https://www.youtube.com/live/xxxxxxxxxxx

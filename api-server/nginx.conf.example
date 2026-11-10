@@ -1,0 +1,70 @@
+# SurfArr API Server — nginx reverse proxy
+# Place at: /etc/nginx/sites-available/api.example.com
+# Enable:   ln -s /etc/nginx/sites-available/api.example.com /etc/nginx/sites-enabled/
+# SSL:      certbot --nginx -d api.example.com
+
+server {
+    listen 80;
+    server_name api.example.com;
+
+    # Redirect all HTTP → HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name api.example.com;
+
+    # --- SSL (managed by Certbot) ---
+    ssl_certificate     /etc/letsencrypt/live/api.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.example.com/privkey.pem;
+    include             /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam         /etc/letsencrypt/ssl-dhparams.pem;
+
+    # --- Security headers ---
+    add_header X-Content-Type-Options   "nosniff"        always;
+    add_header X-Frame-Options          "DENY"           always;
+    add_header Referrer-Policy          "no-referrer"    always;
+
+    # --- Body size (API only — no file uploads needed) ---
+    client_max_body_size 10k;
+
+    # --- Unauthenticated health check (monitoring / Docker healthcheck) ---
+    location = /health {
+        proxy_pass         http://127.0.0.1:3001;
+        proxy_set_header   X-Forwarded-For    $remote_addr;
+        proxy_set_header   X-Forwarded-Proto  $scheme;
+        proxy_set_header   Host               $host;
+        proxy_http_version 1.1;
+
+        # Cache health responses briefly to reduce backend load
+        proxy_cache_valid 200 5s;
+        access_log off;
+    }
+
+    # --- All API routes ---
+    location / {
+        proxy_pass         http://127.0.0.1:3001;
+        proxy_set_header   X-Forwarded-For    $remote_addr;
+        proxy_set_header   X-Forwarded-Proto  $scheme;
+        proxy_set_header   Host               $host;
+        proxy_http_version 1.1;
+        proxy_set_header   Upgrade            $http_upgrade;
+        proxy_set_header   Connection         'upgrade';
+        proxy_cache_bypass $http_upgrade;
+
+        # Timeouts — API queries can take a moment on large playlists
+        proxy_connect_timeout 10s;
+        proxy_read_timeout    30s;
+        proxy_send_timeout    10s;
+
+        # Pass real client IP to Express (TRUST_PROXY=1 in api-server .env)
+        # Rate limiting works correctly only when this is set
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    # --- Block common scanner/exploit paths ---
+    location ~* \.(php|asp|aspx|cgi|sh|env)$ {
+        return 404;
+    }
+}

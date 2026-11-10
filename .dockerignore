@@ -22,7 +22,7 @@ server/db
 server/data/commercials/*
 plugins/
 
-# Private API server / scripts (not part of the image)
+# API server (has its own image: api-server/Dockerfile) and scripts
 api-server/
 scripts/
 
