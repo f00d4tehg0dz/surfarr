@@ -2,7 +2,7 @@
 
 All notable changes to SurfArr. Docker images: `f00d4tehg0dz/surfarr:<version>` on Docker Hub and `ghcr.io/f00d4tehg0dz/surfarr:<version>`.
 
-## [Unreleased]
+## [2.1.2] - 2026-11-19
 
 ### Added
 - **Self-hosted API.** The API server that feeds SurfArr its channels is now in this repo under `api-server/`, with MongoDB and Docker. Run your own, drop your playlist lists in a folder, import them, and a channel turns on as soon as it has episodes. Image: `f00d4tehg0dz/surfarr-api`.
