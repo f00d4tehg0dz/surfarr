@@ -10,6 +10,9 @@
 // Output format: XMLTV (xmltv.dtd), accepted by Plex, Jellyfin, Emby.
 
 const virtualClock = require('../channels/virtualClock');
+const config = require('../config');
+const { logoUrl } = require('../hdhr/channelLogo');
+const { isArchiveId, archiveThumbUrl } = require('../content/mediaSource');
 
 // Cache generated XML for 1 hour to avoid regenerating on every request
 let cachedXml = null;
@@ -34,6 +37,40 @@ function formatXMLTVDate(ms) {
     pad(d.getUTCSeconds()) +
     ' +0000'
   );
+}
+
+// Picture for a programme: what the API gave us, or the stock thumbnail
+// every YouTube video / Internet Archive item has.
+function thumbFor(video) {
+  if (!video) return '';
+  if (/^https?:\/\//i.test(video.thumbnailUrl || '')) return video.thumbnailUrl;
+  if (isArchiveId(video.id)) return archiveThumbUrl(video.id);
+  if (/^[A-Za-z0-9_-]{11}$/.test(video.id || '')) return `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`;
+  return '';
+}
+
+// XMLTV categories. Emby, Jellyfin and Plex sort the guide into Movies /
+// Kids / Series from these words.
+const XMLTV_CATEGORIES = {
+  Movies: ['Movie'],
+  Cartoons: ['Children', 'Animation'],
+  Kids: ['Children'],
+  Sitcoms: ['Series', 'Comedy'],
+  Drama: ['Series', 'Drama'],
+  Shows: ['Series'],
+  Documentary: ['Documentary'],
+  'Talk TV': ['Talk'],
+  Specials: ['Special'],
+};
+
+function categoryXml(ch) {
+  return (XMLTV_CATEGORIES[ch.category] || [])
+    .map((c) => `    <category lang="en">${c}</category>\n`)
+    .join('');
+}
+
+function iconXml(url) {
+  return url ? `    <icon src="${escapeXml(url)}" />\n` : '';
 }
 
 function escapeXml(str) {
@@ -67,11 +104,13 @@ function generateXMLTV(channels, startTime, hoursAhead) {
   xml += '<!DOCTYPE tv SYSTEM "xmltv.dtd">\n';
   xml += '<tv generator-info-name="SurfArr" generator-info-url="">\n\n';
 
-  // Channel declarations
+  // Channel declarations (with a logo tile each)
+  const baseUrl = config.getAdvertiseUrl(config.port);
   for (const ch of enabledChannels) {
     xml += `  <channel id="ch${ch.channelNumber}">\n`;
     xml += `    <display-name>${escapeXml(ch.name)}</display-name>\n`;
     xml += `    <display-name>${ch.channelNumber}</display-name>\n`;
+    xml += iconXml(logoUrl(baseUrl, ch));
     xml += `  </channel>\n`;
   }
   xml += '\n';
@@ -89,6 +128,7 @@ function generateXMLTV(channels, startTime, hoursAhead) {
         xml += `    <title lang="en">${escapeXml(ch.name)}</title>\n`;
         xml += `    <desc lang="en">${escapeXml(`LIVE — ${liveTitle}`)}</desc>\n`;
         xml += `    <category lang="en">Live</category>\n`;
+        xml += iconXml(thumbFor({ id: ch.liveVideoId, thumbnailUrl: ch.thumbnailUrl }));
         xml += `  </programme>\n`;
         cursor += HOUR;
       }
@@ -123,6 +163,8 @@ function generateXMLTV(channels, startTime, hoursAhead) {
       if (video.description) {
         xml += `    <desc lang="en">${escapeXml(video.description)}</desc>\n`;
       }
+      xml += categoryXml(ch);
+      xml += iconXml(thumbFor(video));
       xml += `  </programme>\n`;
 
       cursor += video.duration * 1000;

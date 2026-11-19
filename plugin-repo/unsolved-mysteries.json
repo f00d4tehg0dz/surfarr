@@ -1,0 +1,10 @@
+{
+  "name": "Unsolved Mysteries",
+  "channelNumber": 109,
+  "yamlFile": "unsolved-mysteries.yaml",
+  "enabled": true,
+  "settings": {
+    "shuffle": true,
+    "includeCommercials": false
+  }
+}

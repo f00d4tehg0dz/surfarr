@@ -1,0 +1,10 @@
+{
+  "name": "Saturday Morning Cartoons",
+  "channelNumber": 112,
+  "yamlFile": "saturday-morning.yaml",
+  "enabled": true,
+  "settings": {
+    "shuffle": true,
+    "includeCommercials": false
+  }
+}

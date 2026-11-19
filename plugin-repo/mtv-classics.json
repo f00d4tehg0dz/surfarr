@@ -1,6 +1,6 @@
 {
   "name": "MTV Classics",
-  "channelNumber": 93,
+  "channelNumber": 111,
   "yamlFile": "plugin-repo/mtv-classics.yaml",
   "enabled": true,
   "settings": {

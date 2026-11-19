@@ -29,6 +29,8 @@ You'll use two URLs:
 2. Click **Add Tuner**, choose **HD Homerun**, and enter `http://<your-ip>:8888`.
 3. Add an XMLTV guide source: `http://<your-ip>:8888/epg.xml`.
 
+Channel logos and programme pictures come from the guide. If they're missing after an update, refresh the guide data in Emby (**Live TV → Refresh Guide Data**). Emby has to be able to reach SurfArr at the address the guide uses, so set `ADVERTISE_IP` or `ADVERTISE_URL` if SurfArr runs in bridge mode or behind a proxy.
+
 ## IPTV players (VLC, TiviMate, IPTV Smarters…)
 
 Point the player at the M3U playlist:

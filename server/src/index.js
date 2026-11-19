@@ -29,6 +29,7 @@ const discoverRoute = require('./hdhr/discoverRoute');
 const lineupRoute = require('./hdhr/lineupRoute');
 const epgRoute = require('./epg/epgRoute');
 const m3uRoute = require('./routes/m3uRoute');
+const channelLogoRoute = require('./hdhr/channelLogo');
 const channelsRoute = require('./routes/channelsRoute');
 const settingsRoute = require('./routes/settingsRoute');
 const streamRoute = require('./routes/streamRoute');
@@ -116,6 +117,8 @@ async function main() {
   app.use('/', lineupRoute);
   app.use('/', epgRoute);
   app.use('/', m3uRoute);
+  // Channel logo tiles for the guide and the M3U (Emby, Jellyfin, IPTV players)
+  app.use('/', channelLogoRoute);
 
   // Stream endpoint
   app.use('/stream', streamRoute);
