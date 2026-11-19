@@ -40,7 +40,8 @@ function parseYamlFile(filePath) {
 
   for (const line of content.split('\n')) {
     const trimmed = line.trim();
-    if (!trimmed || !trimmed.includes('https://')) continue;
+    // '#' lines are comments (disabled sources, notes), never sources
+    if (!trimmed || trimmed.startsWith('#') || !trimmed.includes('https://')) continue;
 
     const urlMatch = trimmed.match(/https?:\/\/[^\s]+/);
     if (!urlMatch) continue;

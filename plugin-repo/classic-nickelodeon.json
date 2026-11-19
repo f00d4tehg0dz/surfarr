@@ -1,0 +1,10 @@
+{
+  "name": "Classic Nickelodeon",
+  "channelNumber": 110,
+  "yamlFile": "classic-nickelodeon.yaml",
+  "enabled": true,
+  "settings": {
+    "shuffle": true,
+    "includeCommercials": false
+  }
+}

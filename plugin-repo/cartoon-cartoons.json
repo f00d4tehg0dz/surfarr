@@ -1,0 +1,10 @@
+{
+  "name": "Cartoon Cartoons",
+  "channelNumber": 96,
+  "yamlFile": "cartoon-cartoons.yaml",
+  "enabled": true,
+  "settings": {
+    "shuffle": true,
+    "includeCommercials": false
+  }
+}

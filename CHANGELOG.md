@@ -10,6 +10,8 @@ All notable changes to SurfArr. Docker images: `f00d4tehg0dz/surfarr:<version>` 
 - **Channel sources in Settings.** Edit the list in the dashboard, one address per line, and see which sources are online. Saving a new list starts a sync.
 - `docker/docker-compose.selfhosted.yml` runs SurfArr, the API and MongoDB as one stack.
 - A wiki page: Self-Hosting the API.
+- **Channel logos and programme pictures.** The guide (`/epg.xml`) and the M3U now carry a logo for every channel and a thumbnail for every programme, so Emby, Jellyfin, Plex and IPTV players stop showing blank tiles. Logos are drawn by SurfArr at `/logo/<channel-id>.png`.
+- Guide categories (Movie, Children, Series and so on), so media servers file programmes under the right tab.
 
 ### Changed
 - Plugin channels that live on an API are picked up on every sync, not only at startup.
@@ -17,6 +19,9 @@ All notable changes to SurfArr. Docker images: `f00d4tehg0dz/surfarr:<version>` 
 
 ### Fixed
 - The API address in Settings was saved but never used. It works now.
+- **Plugin store: the list files were missing.** Most packs in `plugin-repo/` had no YAML file, so installing them failed. Every pack now has its list and config. Classic Nickelodeon, MTV Classics and Saturday Morning Cartoons installed but never showed up because their channel numbers were in the reserved range; they have new numbers. Unsolved Mysteries no longer shares a number with MST3K, and Nickelodeon 2000s is gone until it has a list.
+- Emby: the tuner lineup now says the streams are H.264 / AAC instead of leaving Emby to assume MPEG-2.
+- A `#` line in a plugin's YAML is a comment. Before, a commented-out line with a link in it was still imported.
 
 ## [2.1.0] - 2026-11-07
 

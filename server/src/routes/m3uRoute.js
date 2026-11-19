@@ -8,6 +8,7 @@ const express = require('express');
 const router = express.Router();
 const config = require('../config');
 const { getDb } = require('../db/lowdb');
+const { logoUrl } = require('../hdhr/channelLogo');
 
 // Both names are served: README/Plex users know it as lineup.m3u, the
 // dashboard historically linked playlist.m3u.
@@ -26,7 +27,7 @@ router.get(['/playlist.m3u', '/lineup.m3u'], (req, res) => {
   for (const ch of enabledChannels) {
     const group = ch.isLive ? 'Live' : ch.isPlugin ? 'Plugins' : ch.isStandalone ? 'Curated' : ch.decade || 'SurfArr';
     const name = String(ch.name).replace(/"/g, "'");
-    m3u += `#EXTINF:-1 tvg-id="ch${ch.channelNumber}" tvg-name="${name}" tvg-chno="${ch.channelNumber}" group-title="${group}",${ch.name}\n`;
+    m3u += `#EXTINF:-1 tvg-id="ch${ch.channelNumber}" tvg-name="${name}" tvg-chno="${ch.channelNumber}" tvg-logo="${logoUrl(baseUrl, ch)}" group-title="${group}",${ch.name}\n`;
     m3u += `${baseUrl}/stream/${ch.id}\n\n`;
   }
 

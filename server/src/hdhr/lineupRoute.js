@@ -27,6 +27,10 @@ router.get('/lineup.json', (req, res) => {
     GuideNumber: String(ch.channelNumber),
     GuideName: ch.name,
     HD: 1,
+    // What the stream really is. Real tuners send MPEG-2/AC-3, and Emby
+    // assumes that unless the lineup says otherwise.
+    VideoCodec: 'H264',
+    AudioCodec: 'AAC',
     URL: `${baseUrl}/stream/${ch.id}`,
   }));
 

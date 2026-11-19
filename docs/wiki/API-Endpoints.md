@@ -9,7 +9,8 @@ All of these are served on `http://<your-ip>:8888`.
 | `/discover.json` | HDHomeRun device identity |
 | `/lineup.json` | Channel lineup (JSON, HDHomeRun format) |
 | `/lineup.m3u` or `/playlist.m3u` | Channel lineup as an M3U playlist |
-| `/epg.xml` | XMLTV guide for the next 24 hours |
+| `/epg.xml` | XMLTV guide for the next 24 hours, with channel logos and programme pictures |
+| `/logo/<channel-id>.png` | Logo tile for a channel |
 | `/tv` | The browser TV mode |
 
 ## For checking on things
