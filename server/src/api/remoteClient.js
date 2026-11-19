@@ -12,6 +12,11 @@
 // With a single API the behaviour is exactly what it always was.
 
 const config = require('../config');
+const pkg = require('../../package.json');
+
+// Say who we are. The default Node user agent looks like an anonymous bot to
+// a CDN in front of an API; a named one can be recognised and allowed.
+const USER_AGENT = `SurfArr/${pkg.version} (+https://github.com/f00d4tehg0dz/surfarr)`;
 
 // Tiny GET-JSON helper on Node's built-in fetch (no axios): query params, a
 // timeout, and throwing on non-2xx with err.response = { status, data }.
@@ -24,14 +29,22 @@ function createClient(baseUrl) {
         if (v !== undefined && v !== null) url.searchParams.set(k, String(v));
       }
       const res = await fetch(url, {
-        headers: { Accept: 'application/json' },
+        headers: { Accept: 'application/json', 'User-Agent': USER_AGENT },
         signal: AbortSignal.timeout(timeout),
       });
       const text = await res.text();
       let data = text;
       try { data = text ? JSON.parse(text) : null; } catch { /* not JSON */ }
       if (!res.ok) {
-        const err = new Error(`Request failed with status code ${res.status}`);
+        // Cloudflare answers a bot challenge with an HTML page no server can
+        // solve. Name it, so the log doesn't read like the API is down.
+        const challenged = res.headers.get('cf-mitigated') === 'challenge';
+        const err = new Error(
+          challenged
+            ? `blocked by a Cloudflare bot challenge (HTTP ${res.status}) — the API's Cloudflare settings are turning this server away`
+            : `Request failed with status code ${res.status}`
+        );
+        err.challenged = challenged;
         err.response = { status: res.status, data };
         throw err;
       }

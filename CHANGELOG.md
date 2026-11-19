@@ -20,6 +20,8 @@ All notable changes to SurfArr. Docker images: `f00d4tehg0dz/surfarr:<version>` 
 ### Fixed
 - The API address in Settings was saved but never used. It works now.
 - **Plugin store: the list files were missing.** Most packs in `plugin-repo/` had no YAML file, so installing them failed. Every pack now has its list and config. Classic Nickelodeon, MTV Classics and Saturday Morning Cartoons installed but never showed up because their channel numbers were in the reserved range; they have new numbers. Unsolved Mysteries no longer shares a number with MST3K, and Nickelodeon 2000s is gone until it has a list.
+- SurfArr now identifies itself to the API (`SurfArr/<version>`), and when Cloudflare turns it away with a bot challenge the log says so instead of "unreachable (403)" (#4).
+- The version shown at startup and in Settings said 2.1.0 on the 2.1.1 tag (#4).
 - Emby: the tuner lineup now says the streams are H.264 / AAC instead of leaving Emby to assume MPEG-2.
 - A `#` line in a plugin's YAML is a comment. Before, a commented-out line with a link in it was still imported.
 
