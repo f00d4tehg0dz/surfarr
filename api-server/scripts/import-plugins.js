@@ -26,6 +26,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 const mongoose = require('mongoose');
+const archiveLib = require('./lib/archive');
 const contentFilter = require('../src/content/contentFilter');
 
 // Load api-server/.env (real environment variables win)
@@ -297,10 +298,14 @@ async function main() {
 
     for (let i = 0; i < entries.length; i++) {
       const entry = entries[i];
-      const label = entry.isPlaylist ? 'playlist' : 'video';
+      // archive.org item, collection or search: read from the Internet Archive
+      const isArchive = /archive\.org\//i.test(entry.url);
+      const label = isArchive ? 'archive.org' : entry.isPlaylist ? 'playlist' : 'video';
 
       try {
-        let videos = await fetchVideoMetadata(entry.url, entry.showName, entry.isPlaylist);
+        let videos = isArchive
+          ? await archiveLib.listArchive(entry.url, entry.showName, contentFilter)
+          : await fetchVideoMetadata(entry.url, entry.showName, entry.isPlaylist);
 
         if (!noFilter && videos.length > 0) {
           const { kept, dropped } = contentFilter.filterVideos(videos, {

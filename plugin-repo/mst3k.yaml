@@ -1,5 +1,6 @@
 # MST3K: SurfArr channel pack
-# One source per line:  [year] - Show Name - YouTube playlist or video URL
+# One source per line:  [year] - Show Name - URL
+# URL: a YouTube playlist or video, or an archive.org item, collection or search
 
 1988 - MST3K Worldwide Marathons - https://www.youtube.com/playlist?list=PLYy4ZargUluebaS6coifGqF4nYFNrPOZ3
 1989 - MST3K Trace Thursday - https://www.youtube.com/playlist?list=PLYy4ZargUludPGX4bOoErxm-30zGL-NIv

@@ -29,7 +29,8 @@ function resolveYamlPath(yamlFile) {
 }
 
 /**
- * Parse a YAML file (same format as import-yaml.js).
+ * Parse a YAML file (same format as import-yaml.js). A source is a YouTube
+ * playlist / channel / video, or an archive.org item, collection or search.
  * Returns array of { showName, url }.
  */
 function parseYamlFile(filePath) {

@@ -1,5 +1,6 @@
 # Classic Game Shows: SurfArr channel pack
-# One source per line:  [year] - Show Name - YouTube playlist or video URL
+# One source per line:  [year] - Show Name - URL
+# URL: a YouTube playlist or video, or an archive.org item, collection or search
 
 1962 - Password - https://www.youtube.com/playlist?list=PLgorHfeWgLHEz9Mwzyob_gHzATttLX7TA
 1962 - Beat the Clock - https://www.youtube.com/playlist?list=PLgorHfeWgLHGf8wFOWjGrkBhom3efre3c
@@ -28,26 +29,26 @@
 1992 - Nickelodeon GUTS - https://www.youtube.com/playlist?list=PLfslG9cDB8PcZqjo8dcgqPJTyjNwEbrXu
 1993 - Legends of the Hidden Temple - https://www.youtube.com/playlist?list=PLzuK_ULQ8CPUdE-4b8xdUK4x5wDDH7eUw
 
-# Also on this channel through the SurfArr API (Internet Archive, not read from this file):
-# 1950 - What's My Line?
-# 1950 - You Bet Your Life
-# 1952 - I've Got a Secret
-# 1956 - To Tell the Truth
-# 1962 - Beat the Clock
-# 1966 - Newlywed Game
-# 1972 - Split Second
-# 1973 - Match Game
-# 1975 - Match Game PM
-# 1978 - Card Sharks
-# 1979 - Match Game Hollywood Squares Hour
-# 1983 - Press Your Luck
-# 1984 - Body Language
-# 1984 - Trivia Trap
-# 1986 - Double Dare
-# 1988 - Scrabble
-# 1990 - Supermarket Sweep
-# 1992 - Nickelodeon GUTS
-# 1992 - Nick Arcade
-# 1995 - Global GUTS
-# 1975 - Wheel of Fortune
-# 1974 - Match Game '74
+# Internet Archive
+1950 - What's My Line? - https://archive.org/search?query=title%3A(%22What's%20My%20Line%3F%22)
+1950 - You Bet Your Life - https://archive.org/search?query=title%3A(%22You%20Bet%20Your%20Life%22)
+1952 - I've Got a Secret - https://archive.org/search?query=title%3A(%22I've%20Got%20a%20Secret%22)
+1956 - To Tell the Truth - https://archive.org/details/totellthetruth1969-bmp
+1962 - Beat the Clock - https://archive.org/search?query=title%3A(%22Beat%20the%20Clock%22)
+1966 - Newlywed Game - https://archive.org/search?query=title%3A(%22Newlywed%20Game%22)
+1972 - Split Second - https://archive.org/details/SplitSecond1986_BMP
+1973 - Match Game - https://archive.org/details/matchgame-1979-1982-bmp
+1975 - Match Game PM - https://archive.org/details/matchgamePM-BMP
+1978 - Card Sharks - https://archive.org/details/cardsharks1978-bmp
+1979 - Match Game Hollywood Squares Hour - https://archive.org/search?query=title%3A(%22Match%20Game%20Hollywood%20Squares%20Hour%22)
+1983 - Press Your Luck - https://archive.org/details/pressyourluck-bmp
+1984 - Body Language - https://archive.org/details/bodylanguage-bmp
+1984 - Trivia Trap - https://archive.org/search?query=title%3A(%22Trivia%20Trap%22)
+1986 - Double Dare - https://archive.org/details/double-dare-1988_202011
+1988 - Scrabble - https://archive.org/details/scrabbleshowdown-bmp
+1990 - Supermarket Sweep - https://archive.org/details/supermarketsweep-bmp
+1992 - Nickelodeon GUTS - https://archive.org/details/nickelodeon-guts-GaS
+1992 - Nick Arcade - https://archive.org/search?query=title%3A(%22Nick%20Arcade%22)
+1995 - Global GUTS - https://archive.org/details/nickelodeon-global-guts-season-4
+1975 - Wheel of Fortune - https://archive.org/details/wheelnbc-7581-bmp
+1974 - Match Game '74 - https://archive.org/details/matchgame1974-BMP

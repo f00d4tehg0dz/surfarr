@@ -18,6 +18,7 @@ const remoteClient = require('../api/remoteClient');
 const memCache = require('../api/cache');
 const ytdlp = require('../streaming/ytdlp');
 const contentFilter = require('../content/contentFilter');
+const archive = require('../content/archive');
 const { getDb } = require('../db/lowdb');
 const { STANDALONE_CHANNELS } = require('../channels/channelGrid');
 const { refreshRemoteConfig } = require('../channels/remoteConfig');
@@ -78,8 +79,10 @@ function applyVideos(channel, videos) {
 }
 
 /**
- * Sync a plugin channel by expanding all its YAML entries via yt-dlp.
- * Each entry may be a playlist, a channel (@handle) or a single video.
+ * Sync a plugin channel by expanding all its YAML entries.
+ * A YouTube entry (playlist, channel @handle or single video) goes through
+ * yt-dlp. An archive.org entry (item, collection or search URL) is read
+ * straight from the Internet Archive: every MP4 in it becomes an episode.
  */
 async function syncPluginChannel(channel) {
   const sources = channel.pluginConfig?.videoSources || [];
@@ -97,7 +100,9 @@ async function syncPluginChannel(channel) {
 
   for (const source of sources) {
     try {
-      const listed = await ytdlp.listPlaylist(source.url);
+      const listed = archive.isArchiveUrl(source.url)
+        ? await archive.listArchive(source.url, source.showName, contentFilter)
+        : await ytdlp.listPlaylist(source.url);
       const { kept, dropped } = contentFilter.filterVideos(listed, {
         category: filterCategory,
         showName: source.showName,

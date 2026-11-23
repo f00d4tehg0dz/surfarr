@@ -1,5 +1,6 @@
 # Nick at Nite: SurfArr channel pack
-# One source per line:  [year] - Show Name - YouTube playlist or video URL
+# One source per line:  [year] - Show Name - URL
+# URL: a YouTube playlist or video, or an archive.org item, collection or search
 
 1955 - The Honeymooners Full Episodes - https://www.youtube.com/playlist?list=PLyQ29uBk6PyinjsNgUqystRwqqsAlfAyP
 1970 - The Mary Tyler Moore Show - https://www.youtube.com/playlist?list=PLiZCl6XIGf-iwGZYwytXIVGNvyroosWKN
@@ -12,23 +13,23 @@
 1978 - Mork & Mindy - https://www.youtube.com/playlist?list=PLTyduopVNLbgDh_ardVd0IGwXLK3iz106
 1978 - WKRP in Cincinnati - https://www.youtube.com/playlist?list=PLHSbAz1hu9sRIi36Zq4M5cafOcbEHNYzK
 
-# Also on this channel through the SurfArr API (Internet Archive, not read from this file):
-# 1950 - The George Burns and Gracie Allen Show
-# 1950 - The Jack Benny Program
-# 1952 - The Adventures of Ozzie and Harriet
-# 1957 - Leave It to Beaver
-# 1959 - Bonanza
-# 1961 - Mister Ed
-# 1961 - The Dick Van Dyke Show
-# 1962 - The Lucy Show
-# 1962 - The Beverly Hillbillies
-# 1963 - Petticoat Junction
-# 1964 - The Addams Family
-# 1964 - The Munsters
-# 1965 - Green Acres
-# 1965 - Get Smart
-# 1965 - F Troop
-# 1966 - The Monkees
-# 1970 - The Mary Tyler Moore Show
-# 1976 - Laverne & Shirley
-# 1978 - WKRP in Cincinnati
+# Internet Archive
+1950 - The George Burns and Gracie Allen Show - https://archive.org/details/georgeburnsandgracieallen_202307
+1950 - The Jack Benny Program - https://archive.org/search?query=title%3A(%22The%20Jack%20Benny%20Program%22)
+1952 - The Adventures of Ozzie and Harriet - https://archive.org/details/the-adventures-of-ozzie-and-harriet-the-complete-series
+1957 - Leave It to Beaver - https://archive.org/details/leave-it-to-beaver-the-complete-series-1957-1963
+1959 - Bonanza - https://archive.org/search?query=title%3A(%22Bonanza%22)
+1961 - Mister Ed - https://archive.org/details/mister-ed-Lando18
+1961 - The Dick Van Dyke Show - https://archive.org/details/the-dick-van-dyke-show-season-1-of-5-mkv
+1962 - The Lucy Show - https://archive.org/details/the-lucy-show-the-complete-series-1962-1968-DVD
+1962 - The Beverly Hillbillies - https://archive.org/details/TheBeverlyHillbillies
+1963 - Petticoat Junction - https://archive.org/details/Petticoat_Junction_Series
+1964 - The Addams Family - https://archive.org/details/the-addams-family__season-1
+1964 - The Munsters - https://archive.org/details/the-munsters_202510
+1965 - Green Acres - https://archive.org/details/GreenAcresCompleteSeries
+1965 - Get Smart - https://archive.org/details/get-smart
+1965 - F Troop - https://archive.org/details/f-troop-1965-complete-series
+1966 - The Monkees - https://archive.org/details/themonkees.series
+1970 - The Mary Tyler Moore Show - https://archive.org/details/the-mary-tyler-moore-show-s-01
+1976 - Laverne & Shirley - https://archive.org/search?query=title%3A(%22Laverne%20%26%20Shirley%22)
+1978 - WKRP in Cincinnati - https://archive.org/details/wkrp-s-1-e-20-young-master-carlson

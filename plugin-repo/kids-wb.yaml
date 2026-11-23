@@ -1,16 +1,16 @@
 # Kids WB: SurfArr channel pack
-# One source per line:  [year] - Show Name - YouTube playlist or video URL
+# One source per line:  [year] - Show Name - URL
+# URL: a YouTube playlist or video, or an archive.org item, collection or search
 
-
-# Also on this channel through the SurfArr API (Internet Archive, not read from this file):
-# 1990 - Tiny Toon Adventures
-# 1991 - Taz-Mania
-# 1995 - The Sylvester & Tweety Mysteries
-# 1995 - Looney Tunes
-# 1996 - Road Rovers
-# 1996 - Scooby Doo Where Are You
-# 1997 - The New Batman Adventures
-# 1998 - Histeria!
-# 1999 - Batman Beyond
-# 1999 - Batman Beyond
-# 2000 - Static Shock
+# Internet Archive
+1990 - Tiny Toon Adventures - https://archive.org/details/tiny-toon-adventures-1990-1995_202512
+1991 - Taz-Mania - https://archive.org/details/tazmaniametvtoons
+1995 - The Sylvester & Tweety Mysteries - https://archive.org/details/the-sylvester-tweety-mysteries-s-01-e-02-platinum-wheel-of-fortune
+1995 - Looney Tunes - https://archive.org/details/the-1000-looney-tunes-merrie-melodies
+1996 - Road Rovers - https://archive.org/details/road-rovers-complete-series
+1996 - Scooby Doo Where Are You - https://archive.org/details/scooby-doo-mine-your-own-business_202602
+1997 - The New Batman Adventures - https://archive.org/details/the-new-batman-adventures_202408
+1998 - Histeria! - https://archive.org/details/histeria-1998-2000-the-complete-series
+1999 - Batman Beyond - https://archive.org/details/batman-beyond-s-01
+1999 - Batman Beyond - https://archive.org/details/batman-beyond-s-02
+2000 - Static Shock - https://archive.org/details/static-shock-cartoon

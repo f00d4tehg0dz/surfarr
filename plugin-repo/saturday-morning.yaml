@@ -1,5 +1,6 @@
 # Saturday Morning Cartoons: SurfArr channel pack
-# One source per line:  [year] - Show Name - YouTube playlist or video URL
+# One source per line:  [year] - Show Name - URL
+# URL: a YouTube playlist or video, or an archive.org item, collection or search
 
 1969 - Scooby Doo - https://www.youtube.com/watch?v=IJrSD-_wigU&list=PLfwaZCzLQya0stahn2NnDLL90gr-emeDx
 1987 - TMNT - https://www.youtube.com/watch?v=cA5yaZ4f8jI&list=PLdL20h0eF1WwFP3FcQZg6RFrpqqP4Ow8Q
@@ -20,10 +21,10 @@
 1986 - Dennis the Menace - https://www.youtube.com/playlist?list=PLqe1oMGS72n5nRmBGZVlLXgfrVQmRE2C_
 1988 - Mighty Mouse The New Adventures - https://www.youtube.com/playlist?list=PLJGOq3JclIb8GnT3JzmMgtQJTYWb5g3qp
 
-# Also on this channel through the SurfArr API (Internet Archive, not read from this file):
-# 1963 - Astro Boy
-# 1966 - Space Ghost
-# 1979 - Spider-Man and His Amazing Friends
-# 1981 - Smurfs
-# 1985 - Care Bears
-# 1986 - Dennis the Menace
+# Internet Archive
+1963 - Astro Boy - https://archive.org/details/astro-boy-1963
+1966 - Space Ghost - https://archive.org/details/SpaceGhostAllEpisodesLowSegment1
+1979 - Spider-Man and His Amazing Friends - https://archive.org/details/spider-man-and-his-amazing-friends_202403
+1981 - Smurfs - https://archive.org/details/the-smurfs-1981_202601
+1985 - Care Bears - https://archive.org/details/care-bears-dic
+1986 - Dennis the Menace - https://archive.org/details/dennis-the-menace-and-gnasher-the-complete-tv-series-1996-98

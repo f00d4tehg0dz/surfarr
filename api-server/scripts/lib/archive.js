@@ -157,8 +157,13 @@ async function membersVideos(docs, showName, filter) {
   return out;
 }
 
+// Is this plugin / list source an archive.org item, collection or search?
+function isArchiveUrl(url) {
+  return /^https?:\/\/(www\.)?archive\.org\/(details|download|embed|search)/i.test(String(url || '').trim());
+}
+
 function searchUrl(query) {
   return `https://archive.org/search?query=${encodeURIComponent(query)}`;
 }
 
-module.exports = { search, metadata, parseLength, playableFiles, itemVideos, membersVideos, listArchive, parseArchiveUrl, searchUrl, englishLanguage };
+module.exports = { search, metadata, parseLength, playableFiles, itemVideos, membersVideos, listArchive, parseArchiveUrl, isArchiveUrl, searchUrl, englishLanguage };

@@ -2,6 +2,12 @@
 
 All notable changes to SurfArr. Docker images: `f00d4tehg0dz/surfarr:<version>` on Docker Hub and `ghcr.io/f00d4tehg0dz/surfarr:<version>`.
 
+## [Unreleased]
+
+### Added
+- **archive.org in plugin lists.** A line in a plugin's YAML can now be an Internet Archive item, collection or search, not only YouTube. Every MP4 in it becomes an episode, so you can build a channel from your own uploads. Works for plugins you install or write yourself and for `import-plugins.js` on a self-hosted API.
+- The channel packs list their Internet Archive shows as real sources now (Kids WB was empty without them). Unsolved Mysteries gets two Archive sets for episodes YouTube hides behind an age check.
+
 ## [2.1.2] - 2026-11-19
 
 ### Added
