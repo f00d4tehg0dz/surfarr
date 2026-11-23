@@ -1,5 +1,6 @@
 # Classic Nickelodeon: SurfArr channel pack
-# One source per line:  [year] - Show Name - YouTube playlist or video URL
+# One source per line:  [year] - Show Name - URL
+# URL: a YouTube playlist or video, or an archive.org item, collection or search
 
 1991 - Doug - https://www.youtube.com/playlist?list=PLLhOnau-tupQ25XfsNfWl98sovKhyMhLD
 1991 - Rugrats - https://www.youtube.com/watch?v=VxVGRFq93Po&list=PLLhOnau-tupQ0EFBJ_OAu4NnB1kTv9KFP
@@ -12,5 +13,5 @@
 1997 - The Angry Beavers - https://www.youtube.com/watch?v=Q5YtJeLGCyw&list=PLLhOnau-tupTw-Jw33acSxmN_cEIKUASs
 1993 - Are you afraid of the dark - https://youtu.be/i3wDJscuuoM?list=PLl74zfTaQUYYLPwuwchUvedQ-Ck9i0a-d
 
-# Also on this channel through the SurfArr API (Internet Archive, not read from this file):
-# 1998 - Oh Yeah! Cartoons
+# Internet Archive
+1998 - Oh Yeah! Cartoons - https://archive.org/details/oyc-collection

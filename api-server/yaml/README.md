@@ -21,7 +21,7 @@ Anything after the category is yours to use, so `90s-cartoons-mine.yaml` and `90
 
 These file names feed the themed channels (92 and up): `classic-nickelodeon`, `saturday-morning`, `unsolved-mysteries`, `fox-kids`, `cartoon-cartoons`, `pbs-kids-classic`, `mst3k`, `sci-fi-originals`, `infomercials`, `late-night-classics`, `classic-game-shows`, `kids-wb`, `disney-afternoon`, `nick-at-nite`, `80s-90s-commercials`, `g4`, `reality-tv` (each with `.yaml`).
 
-For a brand new themed channel of your own, write a plugin pack (see the Plugins wiki page) and import it with `node scripts/import-plugins.js`.
+For a brand new themed channel of your own, write a plugin pack (see the Plugins wiki page) and import it with `node scripts/import-plugins.js`. Plugin packs take the same sources as these lists, archive.org included.
 
 ## Line format
 

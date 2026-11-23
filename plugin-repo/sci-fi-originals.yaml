@@ -1,5 +1,6 @@
 # Sci-Fi Originals: SurfArr channel pack
-# One source per line:  [year] - Show Name - YouTube playlist or video URL
+# One source per line:  [year] - Show Name - URL
+# URL: a YouTube playlist or video, or an archive.org item, collection or search
 
 1955 - Alfred Hitchcock Presents - https://www.youtube.com/playlist?list=PLrzVfut6mDggsnDVT9jTT-xzX01MJiPB2
 1955 - Alfred Hitchcock Presents Season 1 - https://www.youtube.com/playlist?list=PLKgr5XQgGAaHXryKVOwB7ARgwrUR0xKCA
@@ -9,16 +10,16 @@
 1987 - Captain Power - https://www.youtube.com/playlist?list=PLDErEApQRzjTgWqRE-vjP8_30lU1tVELJ
 1992 - Forever Knight - https://www.youtube.com/playlist?list=PLzovi87vDfzIIcI4-Rx5s0YqiOaT3uF0-
 
-# Also on this channel through the SurfArr API (Internet Archive, not read from this file):
-# 1950 - Space Patrol
-# 1950 - Tom Corbett, Space Cadet
-# 1954 - Rocky Jones, Space Ranger
-# 1955 - Science Fiction Theatre
-# 1955 - Alfred Hitchcock Presents
-# 1959 - One Step Beyond
-# 1959 - The Twilight Zone
-# 1987 - Captain Power
-# 1989 - Tales from the Crypt
-# 1992 - Forever Knight
-# 1994 - Babylon 5
-# 1997 - Lexx
+# Internet Archive
+1950 - Space Patrol - https://archive.org/details/space-patrol-s-01e-01-low-480x-360p
+1950 - Tom Corbett, Space Cadet - https://archive.org/search?query=title%3A(%22Tom%20Corbett%2C%20Space%20Cadet%22)
+1954 - Rocky Jones, Space Ranger - https://archive.org/details/rocky-jones-space-rangers-1954-s-01e-01-beyond-the-curtain-of-space-chap-1-low-360p-1
+1955 - Science Fiction Theatre - https://archive.org/details/science-fiction-theatre-1957-the-magic-suitcase-s-02-e-36-1_202311
+1955 - Alfred Hitchcock Presents - https://archive.org/details/the-new-alfred-hitchcock-presents-complete
+1959 - One Step Beyond - https://archive.org/details/one-step-beyond
+1959 - The Twilight Zone - https://archive.org/details/twilight-zone-1985-1x-01-shatterday
+1987 - Captain Power - https://archive.org/details/06-a-fire-in-the-dark-1080p-aiupscale-2ch-x-265_202210
+1989 - Tales from the Crypt - https://archive.org/details/crypt-s-5-e-05-people-who-live-in-brass-hearses
+1992 - Forever Knight - https://archive.org/details/forht-s-01-e-02-daht-thond-cha
+1994 - Babylon 5 - https://archive.org/details/babylon-5-season-1
+1997 - Lexx - https://archive.org/details/lexx_20220130

@@ -1,5 +1,6 @@
 # Cartoon Cartoons: SurfArr channel pack
-# One source per line:  [year] - Show Name - YouTube playlist or video URL
+# One source per line:  [year] - Show Name - URL
+# URL: a YouTube playlist or video, or an archive.org item, collection or search
 
 1996 - Dexter's Laboratory - https://www.youtube.com/playlist?list=PLdiRsoDNA404qITpUlmqS2yVtBLO9bqb3
 1997 - Cow and Chicken - https://www.youtube.com/playlist?list=PLdiRsoDNA405ff19FLcENj_OjWsaxzOs8
@@ -12,5 +13,5 @@
 2007 - Total Drama Island - https://www.youtube.com/playlist?list=PLg6KfZlgBuDXIQ88XTH707ZzI9xHcKz6J
 2008 - The Marvelous Misadventures of Flapjack - https://www.youtube.com/playlist?list=PLg6KfZlgBuDVdxlXz50LUgTIfuGWEwjV5
 
-# Also on this channel through the SurfArr API (Internet Archive, not read from this file):
-# 1998 - The Powerpuff Girls
+# Internet Archive
+1998 - The Powerpuff Girls - https://archive.org/details/the-powerpuff-girls-1998-the-complete-series

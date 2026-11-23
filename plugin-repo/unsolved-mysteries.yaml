@@ -1,5 +1,6 @@
 # Unsolved Mysteries: SurfArr channel pack
-# One source per line:  [year] - Show Name - YouTube playlist or video URL
+# One source per line:  [year] - Show Name - URL
+# URL: a YouTube playlist or video, or an archive.org item, collection or search
 
 1987 - Unsolved Mysteries - Aliens & UFOs - https://www.youtube.com/watch?v=I9DY2yXhHhw
 1987 - Unsolved Mysteries - Aliens & UFOs - https://www.youtube.com/watch?v=NBiYdJkD6bk
@@ -406,3 +407,7 @@
 2025 - Unsolved Mysteries - Episode Updates 2025 - https://www.youtube.com/watch?v=LvEA0dG7yb4
 2025 - Unsolved Mysteries - Episode Updates 2025 - https://www.youtube.com/watch?v=gQ4aMW7-hl8
 2025 - Unsolved Mysteries - Episode Updates 2025 - https://www.youtube.com/watch?v=w9ceYeh4HYk
+
+# Internet Archive
+1993 - Unsolved Mysteries - https://archive.org/details/capture-a-2981
+1999 - Unsolved Mysteries - https://archive.org/details/um.11.vhs
